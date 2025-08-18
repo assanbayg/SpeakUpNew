@@ -1,8 +1,10 @@
 import 'dart:async';
+
 import 'package:get/get.dart';
-// import 'package:azure_speech_recognition_null_safety/azure_speech_recognition_null_safety.dart'; // DISABLED
-import 'package:speakup/features/speakup/controllers/text_to_speech_controller.dart';
 import 'package:permission_handler/permission_handler.dart';
+// DISABLED
+// import 'package:azure_speech_recognition_null_safety/azure_speech_recognition_null_safety.dart';
+import 'package:speakup/features/speakup/controllers/text_to_speech_controller.dart';
 
 class SpeechController extends GetxController {
   // late AzureSpeechRecognition _speechAzure; // DISABLED
@@ -46,7 +48,7 @@ class SpeechController extends GetxController {
       }
     });
     */
-    
+
     // Temporary mock behavior
     print("Speech recognition is temporarily disabled");
   }
@@ -66,16 +68,17 @@ class SpeechController extends GetxController {
         AzureSpeechRecognition.continuousRecording();
       }
       */
-      
+
       // Temporary mock behavior for testing
       if (!_isListening.value) {
         _isListening.value = true;
         print("Mock: Started listening...");
-        
+
         // Simulate listening for 3 seconds then provide mock text
-        Future.delayed(Duration(seconds: 3), () {
+        Future.delayed(const Duration(seconds: 3), () {
           _isListening.value = false;
-          listenText.value = "Привет, это тестовое сообщение"; // Mock Russian text
+          listenText.value =
+              "Привет, это тестовое сообщение"; // Mock Russian text
           print("Mock: Stopped listening, generated mock text");
           textConroller.generateText(listenText.value, onlyListen);
         });
@@ -88,7 +91,7 @@ class SpeechController extends GetxController {
     /*
     AzureSpeechRecognition.stopContinuousRecognition();
     */
-    
+
     // Mock behavior
     _isListening.value = false;
     print("Mock: Stopped recognition");
@@ -98,7 +101,7 @@ class SpeechController extends GetxController {
   void onInit() {
     // TEMPORARILY DISABLED
     // _speechAzure = AzureSpeechRecognition();
-    
+
     print("SpeechController initialized (Azure disabled)");
     super.onInit();
   }

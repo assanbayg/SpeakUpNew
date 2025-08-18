@@ -27,12 +27,12 @@ class STextTheme {
     bodySmall: const TextStyle().copyWith(
         fontSize: 14.0,
         fontWeight: FontWeight.w500,
-        color: SColors.dark.withOpacity(0.5)),
+        color: SColors.dark.withValues(alpha: 0.5)),
     labelLarge: const TextStyle().copyWith(
         fontSize: 12.0, fontWeight: FontWeight.normal, color: SColors.dark),
     labelMedium: const TextStyle().copyWith(
         fontSize: 12.0,
         fontWeight: FontWeight.normal,
-        color: SColors.dark.withOpacity(0.5)),
+        color: SColors.dark.withValues(alpha: 0.5)),
   );
 }

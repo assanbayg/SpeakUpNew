@@ -5,7 +5,7 @@ import 'package:speakup/features/speakup/controllers/speech_controller.dart';
 import 'package:speakup/features/speakup/controllers/text_to_speech_controller.dart';
 import 'package:speakup/features/speakup/screens/converter_screen.dart';
 import 'package:speakup/features/speakup/screens/map_screen.dart';
-import 'package:speakup/features/speakup/screens/profile_page.dart';
+import 'package:speakup/features/speakup/screens/profile_screen.dart';
 import 'package:speakup/util/constants/sizes.dart';
 import 'package:speakup/util/device/device_utility.dart';
 import 'package:video_player/video_player.dart';
@@ -14,7 +14,7 @@ class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
@@ -37,13 +37,13 @@ class _HomeScreenState extends State<HomeScreen> {
         Get.to(const HomeScreen());
         break;
       case 1:
-        Get.to(ConverterScreen());
+        Get.to(const ConverterScreen());
         break;
       case 2:
         Get.to(const MapScreen(text: ""));
         break;
       case 3:
-        Get.to(UserProfilePage());
+        Get.to(const UserProfileScreen());
         break;
     }
   }

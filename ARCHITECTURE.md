@@ -5,24 +5,23 @@ SpeakUpP is a mobile-first speech therapy application designed to support childr
 
 ## 🧱 Tech Stack
 
-- **Frontend**: React Native (mobile application)
-- **Backend**: Firebase and Supabase (authentication, data storage, hosting)
+- **Frontend**: Flutter (mobile application)
+- **Backend**: Supabase (authentication, data storage, hosting)
 - **AI Integration**: OpenAI Whisper API (speech recognition)
 - **Bot Interface**: Telegram Bot API (accessible interaction layer)
-- **Styling**: Tailwind CSS (for styling components)
 
 ## ⚙️ Architecture Diagram (Text)
 
 ```
-[User] → [Mobile App (React Native)]
+[User] → [Mobile App (Flutter)]
         → [Speechy Bot] → [Telegram Bot API]
         → [Speech Recognition] → [OpenAI Whisper]
-        → [Database & Auth] → [Firebase / Supabase]
+        → [Database & Auth] → [Supabase]
 ```
 
 ## 🔐 Security
 
-- Authentication via Firebase/Supabase
+- Authentication via Supabase
 - Secure cloud storage of progress and audio templates
 - Parental controls and access limitations
 
