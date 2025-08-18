@@ -1,8 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:speakup/features/speakup/models/user_model.dart';
-import 'package:speakup/util/helpers/firebase_hepler.dart';
 import 'package:speakup/util/helpers/helper_functions.dart';
 import 'package:speakup/util/helpers/supabase_helper.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -105,23 +103,6 @@ class SignUpController extends GetxController {
       SHelperFunctions.hideProgressIndicator();
       isLoading.value = false;
       SHelperFunctions.showSnackBar('Registration failed: $e');
-    }
-    try {
-      await SFireHelper.fireAuth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-    } on FirebaseAuthException catch (e) {
-      SHelperFunctions.hideProgressIndicator();
-      if (e.code == 'weak-password') {
-        SHelperFunctions.showSnackBar('The password provided is too weak.');
-      } else if (e.code == 'email-already-in-use') {
-        SHelperFunctions.showSnackBar(
-            'The account already exists for that email.');
-      }
-    } catch (e) {
-      SHelperFunctions.hideProgressIndicator();
-      SHelperFunctions.showSnackBar(e.toString());
     }
   }
 

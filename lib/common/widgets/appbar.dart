@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:speakup/features/authentication/screens/login_screen.dart';
 import 'package:speakup/util/constants/sizes.dart';
 import 'package:speakup/util/device/device_utility.dart';
-import 'package:speakup/features/authentication/screens/login_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:speakup/util/helpers/supabase_helper.dart';
 
 class SAppBar extends StatelessWidget implements PreferredSizeWidget {
   const SAppBar({
@@ -49,13 +49,13 @@ class SAppBar extends StatelessWidget implements PreferredSizeWidget {
                 IconButton(
                   icon: const Icon(Icons.logout),
                   onPressed: () async {
-                    await FirebaseAuth.instance.signOut();
-                    Get.offAll(LoginScreen());
+                    await SSupabaseHelper.auth.signOut();
+                    Get.offAll(const LoginScreen());
                   },
                 ),
               ]
             : null,
-        iconTheme: IconThemeData());
+        iconTheme: const IconThemeData());
   }
 
   @override

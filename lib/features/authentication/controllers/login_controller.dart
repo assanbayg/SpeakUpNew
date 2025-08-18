@@ -1,16 +1,19 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:speakup/features/speakup/screens/home_screen.dart';
-import 'package:speakup/util/helpers/firebase_hepler.dart';
 import 'package:speakup/util/helpers/helper_functions.dart';
+import 'package:speakup/util/helpers/supabase_helper.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
 
 class LoginController extends GetxController {
   /// Text Fields Controller
   final TextEditingController email = TextEditingController();
   final TextEditingController password = TextEditingController();
+
+  RxBool isLoading = false.obs;
 
   /// LoginUp & Fields Validations Function
   void login(
@@ -30,31 +33,42 @@ class LoginController extends GetxController {
   }
 
   /// User Login With Email & Password Function
-  Future<void> loginUser(context,
-      {required String email, required String password}) async {
-    SHelperFunctions.showProgressIndicator(context);
+  Future<void> loginUser(
+    context, {
+    required String email,
+    required String password,
+  }) async {
     try {
-      await SFireHelper.fireAuth
-          .signInWithEmailAndPassword(email: email, password: password)
-          .onError((error, stackTrace) {
+      isLoading.value = true;
+      SHelperFunctions.showProgressIndicator(context);
+
+      // Sign in with Supabase Auth
+      final AuthResponse response = await SSupabaseHelper.auth
+          .signInWithPassword(email: email, password: password);
+
+      if (response.user != null) {
         SHelperFunctions.hideProgressIndicator();
-        SHelperFunctions.showSnackBar(error.toString());
-        throw error as Object;
-      }).then((value) {
-        SHelperFunctions.hideProgressIndicator();
-        SHelperFunctions.showSnackBar('Successfully Login');
-        Get.offAll(() =>  HomeScreen());
-      });
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        SHelperFunctions.hideProgressIndicator();
-        SHelperFunctions.showSnackBar('No user found for that email.');
-      } else if (e.code == 'wrong-password') {
-        SHelperFunctions.hideProgressIndicator();
-        SHelperFunctions.showSnackBar('Wrong password provided for that user.');
+        isLoading.value = false;
+        SHelperFunctions.showSnackBar('Успешный вход в систему!');
+        Get.offAll(() => const HomeScreen());
       }
+    } on AuthException catch (e) {
+      SHelperFunctions.hideProgressIndicator();
+      isLoading.value = false;
+
+      // Refer here later:
+      // https://supabase.com/docs/guides/auth/debugging/error-codes
+      String errorMessage = e.code ?? 'Login failed';
+      switch (e.code) {
+        case 'invalid_credentials':
+          errorMessage = 'Please enter valid credentials';
+          break;
+      }
+
+      SHelperFunctions.showSnackBar(errorMessage);
     } catch (e) {
       SHelperFunctions.hideProgressIndicator();
+      isLoading.value = false;
       SHelperFunctions.showSnackBar(e.toString());
     }
   }
