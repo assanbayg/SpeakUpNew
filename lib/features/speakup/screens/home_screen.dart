@@ -2,19 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:speakup/common/widgets/appbar.dart';
 import 'package:speakup/features/speakup/controllers/speech_controller.dart';
+import 'package:speakup/features/speakup/controllers/text_to_speech_controller.dart';
+import 'package:speakup/features/speakup/screens/converter_screen.dart';
 import 'package:speakup/features/speakup/screens/map_screen.dart';
-import 'package:speakup/util/constants/image_strings.dart';
+import 'package:speakup/features/speakup/screens/profile_page.dart';
 import 'package:speakup/util/constants/sizes.dart';
 import 'package:speakup/util/device/device_utility.dart';
-import 'package:speakup/features/speakup/controllers/text_to_speech_controller.dart';
 import 'package:video_player/video_player.dart';
-import '../../../util/constants/colors.dart';
-import 'package:speakup/features/speakup/screens/home_screen.dart';
-import 'package:speakup/features/speakup/screens/converter_screen.dart';
-import 'package:speakup/features/speakup/screens/profile_page.dart';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -37,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
     switch (index) {
       case 0:
-        Get.to(HomeScreen());
+        Get.to(const HomeScreen());
         break;
       case 1:
         Get.to(ConverterScreen());
@@ -54,7 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildNavItem(String asset, String label, int index) {
     return GestureDetector(
       onTap: () => _onItemTapped(index),
-      child: Container(
+      child: SizedBox(
         width: MediaQuery.of(context).size.width / 4,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -115,7 +112,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: Container(
+      bottomNavigationBar: SizedBox(
         height: 60,
         child: ListView(
           scrollDirection: Axis.horizontal,
@@ -237,10 +234,10 @@ class _HomeScreenState extends State<HomeScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Padding(
-            padding: EdgeInsets.only(bottom: 40.0),
+            padding: const EdgeInsets.only(bottom: 40.0),
             child: IconButton(
               padding: const EdgeInsets.all(8),
-              icon: Icon(
+              icon: const Icon(
                 Icons.mic,
                 color: Colors.white,
               ),
