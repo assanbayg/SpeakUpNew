@@ -28,6 +28,8 @@ dependencies:
   flutter_map: ^8.2.1
   latlong2: ^0.9.1
   http: ^1.5.0
+  supabase_flutter: ^2.9.1
+  flutter_dotenv: ^5.2.1
 
 dev_dependencies:
   flutter_test:
@@ -44,6 +46,7 @@ flutter:
   uses-material-design: true
 
   assets:
+    - .env
     - assets/
     - assets/images/
     - assets/images/logo.png

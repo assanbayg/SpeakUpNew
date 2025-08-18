@@ -2,9 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:speakup/features/speakup/models/user_model.dart';
-import 'package:speakup/features/speakup/screens/home_screen.dart';
 import 'package:speakup/util/helpers/firebase_hepler.dart';
 import 'package:speakup/util/helpers/helper_functions.dart';
+import 'package:speakup/util/helpers/supabase_helper.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SignUpController extends GetxController {
   /// Text Fields Controller
@@ -16,72 +17,95 @@ class SignUpController extends GetxController {
   /// Password Visibility Toggles
   RxBool isPasswordVisible = false.obs;
   RxBool isRePasswordVisible = false.obs;
+  RxBool isLoading = false.obs;
 
-  /// Fields Validations Function
-  void signUp(BuildContext context,
-      {required String fullName,
-      required String email,
-      required String password,
-      required String rePassword}) {
-    if (email.isNotEmpty &&
-        fullName.isNotEmpty &&
-        password.isNotEmpty &&
-        rePassword.isNotEmpty) {
-      if (SHelperFunctions.isEmailValid(email: email)) {
-        if (password == rePassword) {
-          /// Call SignUp User Function
-          signUpUser(context, email: email, password: password)
-              .then((value) async {
-            try {
-              /// Create User Model
-              final UserModel user = UserModel(
-                userId: SFireHelper.fireAuth.currentUser!.uid,
-                displayName: fullName,
-                email: email,
-                password: password,
-              );
-
-              /// Upload User data
-              await uploadUserData(user).then((value) {
-                SHelperFunctions.hideProgressIndicator();
-                Get.offAll(() => HomeScreen());
-              });
-            } catch (e) {
-              SHelperFunctions.showSnackBar(
-                  'Error occurred during registration. $e');
-            }
-          });
-        } else {
-          SHelperFunctions.showSnackBar("Passwords do not match");
-        }
-      } else {
-        SHelperFunctions.showSnackBar("Invalid email");
+  // Sign Up Function
+  void signUp(
+    BuildContext context, {
+    required String fullName,
+    required String email,
+    required String password,
+    required String rePassword,
+  }) {
+    // Validate Fields
+    if (email.isEmpty ||
+        fullName.isEmpty ||
+        password.isEmpty ||
+        rePassword.isEmpty) {
+      {
+        SHelperFunctions.showSnackBar("Заполните все поля");
+        return;
       }
-    } else {
-      SHelperFunctions.showSnackBar("Please fill in all fields");
     }
-  }
+    if (!SHelperFunctions.isEmailValid(email: email)) {
+      SHelperFunctions.showSnackBar("Неверный формат почты");
+      return;
+    }
+    if (password != rePassword) {
+      SHelperFunctions.showSnackBar("Пароли не совпадают");
+      return;
+    }
+    if (password.length < 6) {
+      SHelperFunctions.showSnackBar(
+          "Пароль должен содержать не менее 6 символов");
+      return;
+    }
 
-  /// Upload User To FireStore Function
-  Future<void> uploadUserData(UserModel user) async {
-    try {
-      await SFireHelper.fireStore
-          .collection("Users")
-          .doc(SFireHelper.fireAuth.currentUser!.uid)
-          .set(user.toJson());
-    } catch (e) {
-      SHelperFunctions.hideProgressIndicator();
-      SHelperFunctions.showSnackBar("Error uploading data: $e");
-    }
+    signUpUser(context, fullName: fullName, email: email, password: password);
   }
 
   /// User SignUp With Mail & Password Function
   Future<void> signUpUser(
     BuildContext context, {
+    required String fullName,
     required String email,
     required String password,
   }) async {
-    SHelperFunctions.showProgressIndicator(context);
+    try {
+      isLoading.value = true;
+      SHelperFunctions.showProgressIndicator(context);
+
+      // Sign up user with Supabase Auth
+      final AuthResponse response = await SSupabaseHelper.auth.signUp(
+        email: email,
+        password: password,
+        data: {'display_name': fullName}, // Store display name in auth metadata
+      );
+
+      if (response.user != null) {
+        await uploadUserData(UserModel(
+          id: response.user!.id,
+          displayName: fullName,
+          email: email,
+        ));
+        SHelperFunctions.hideProgressIndicator();
+        isLoading.value = false;
+        return;
+      }
+    } on AuthException catch (e) {
+      SHelperFunctions.hideProgressIndicator();
+      isLoading.value = false;
+
+      // Refer here later:
+      // https://supabase.com/docs/guides/auth/debugging/error-codes
+      String errorMessage = 'Registration failed';
+      switch (e.code) {
+        case 'email_exists':
+          errorMessage = 'An account with this email already exists';
+          break;
+        case 'invalid_credentials':
+          errorMessage = 'Please enter valid credentials';
+          break;
+        default:
+          errorMessage = e.code!;
+      }
+
+      SHelperFunctions.showSnackBar(errorMessage);
+    } catch (e) {
+      SHelperFunctions.hideProgressIndicator();
+      isLoading.value = false;
+      SHelperFunctions.showSnackBar('Registration failed: $e');
+    }
     try {
       await SFireHelper.fireAuth.createUserWithEmailAndPassword(
         email: email,
@@ -99,5 +123,30 @@ class SignUpController extends GetxController {
       SHelperFunctions.hideProgressIndicator();
       SHelperFunctions.showSnackBar(e.toString());
     }
+  }
+
+  /// Upload User Data to Supabase Database
+  Future<void> uploadUserData(UserModel user) async {
+    try {
+      await SSupabaseHelper.client.from('users').insert({
+        'id': user.id,
+        'display_name': user.displayName,
+        'email': user.email,
+      });
+    } catch (e) {
+      SHelperFunctions.hideProgressIndicator();
+      isLoading.value = false;
+      SHelperFunctions.showSnackBar("Error uploading user data: $e");
+      rethrow;
+    }
+  }
+
+  @override
+  void onClose() {
+    email.dispose();
+    password.dispose();
+    fullName.dispose();
+    rePassword.dispose();
+    super.onClose();
   }
 }
