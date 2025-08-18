@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'package:get/get.dart';
-import 'package:azure_speech_recognition_null_safety/azure_speech_recognition_null_safety.dart';
+// import 'package:azure_speech_recognition_null_safety/azure_speech_recognition_null_safety.dart'; // DISABLED
 import 'package:speakup/features/speakup/controllers/text_to_speech_controller.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class SpeechController extends GetxController {
-  late AzureSpeechRecognition _speechAzure;
+  // late AzureSpeechRecognition _speechAzure; // DISABLED
   bool wasStoppedByUser = false;
   final RxBool _isListening = false.obs;
   final RxString listenText = ''.obs;
@@ -16,6 +16,8 @@ class SpeechController extends GetxController {
   final textConroller = Get.find<TextToSpeechController>();
 
   void activateSpeechRecognizer(bool onlyListen) {
+    // TEMPORARILY DISABLED - Azure Speech Recognition
+    /*
     AzureSpeechRecognition.initialize(subKey, region,
         lang: lang, timeout: "1000");
 
@@ -43,6 +45,10 @@ class SpeechController extends GetxController {
         textConroller.generateText(listenText.value, onlyListen);
       }
     });
+    */
+    
+    // Temporary mock behavior
+    print("Speech recognition is temporarily disabled");
   }
 
   void listen(bool onlyListen) async {
@@ -52,27 +58,48 @@ class SpeechController extends GetxController {
       Get.snackbar('Нет доступа',
           'Пожалуйста, предоставьте доступ к микрофону в настройках');
     } else {
-      // У нас есть разрешение на микрофон, продолжаем
+      // TEMPORARILY DISABLED - Mock behavior instead of real speech recognition
+      /*
       if (!_isListening.value) {
         _isListening.value = true;
         activateSpeechRecognizer(onlyListen);
-
         AzureSpeechRecognition.continuousRecording();
+      }
+      */
+      
+      // Temporary mock behavior for testing
+      if (!_isListening.value) {
+        _isListening.value = true;
+        print("Mock: Started listening...");
+        
+        // Simulate listening for 3 seconds then provide mock text
+        Future.delayed(Duration(seconds: 3), () {
+          _isListening.value = false;
+          listenText.value = "Привет, это тестовое сообщение"; // Mock Russian text
+          print("Mock: Stopped listening, generated mock text");
+          textConroller.generateText(listenText.value, onlyListen);
+        });
       }
     }
   }
 
   void stopListening() {
+    // TEMPORARILY DISABLED
+    /*
     AzureSpeechRecognition.stopContinuousRecognition();
-    // listenText.value = '';
+    */
+    
+    // Mock behavior
     _isListening.value = false;
-    print("Stopped recognition");
+    print("Mock: Stopped recognition");
   }
 
   @override
   void onInit() {
-    _speechAzure = AzureSpeechRecognition();
-    // activateSpeechRecognizer();
+    // TEMPORARILY DISABLED
+    // _speechAzure = AzureSpeechRecognition();
+    
+    print("SpeechController initialized (Azure disabled)");
     super.onInit();
   }
 
