@@ -5,7 +5,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:speakup/common/widgets/appbar.dart';
 import 'package:speakup/features/speakup/screens/converter_screen.dart';
 import 'package:speakup/features/speakup/screens/home_screen.dart';
-import 'package:speakup/features/speakup/screens/profile_page.dart';
+import 'package:speakup/features/speakup/screens/profile_screen.dart';
 import 'package:speakup/util/data/marker_coords.dart';
 
 class MapScreen extends StatefulWidget {
@@ -36,13 +36,13 @@ class _MapScreenState extends State<MapScreen> {
         Get.to(const HomeScreen());
         break;
       case 1:
-        Get.to(ConverterScreen());
+        Get.to(const ConverterScreen());
         break;
       case 2:
         Get.to(const MapScreen(text: ""));
         break;
       case 3:
-        Get.to(UserProfilePage());
+        Get.to(const UserProfileScreen());
         break;
     }
   }

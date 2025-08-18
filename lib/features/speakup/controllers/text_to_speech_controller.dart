@@ -1,10 +1,9 @@
 import 'dart:io';
+
 import 'package:audioplayers/audioplayers.dart';
-import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:get/get.dart';
 import 'package:dart_openai/dart_openai.dart';
-import 'package:video_player/video_player.dart';
+import 'package:get/get.dart';
+import 'package:path_provider/path_provider.dart';
 
 class TextToSpeechController extends GetxController {
   final RxString spokenText = ''.obs;
@@ -103,22 +102,14 @@ class TextToSpeechController extends GetxController {
     _isThinking.value = false;
     _isSpeaking.value = true;
 
-    if (duration != null) {
-      Duration? durationValue = await duration;
-      if (durationValue != null) {
-        await Future.delayed(
-            durationValue); // wait for the duration of the audio
-      }
+    Duration? durationValue = await duration;
+    if (durationValue != null) {
+      await Future.delayed(durationValue); // wait for the duration of the audio
     }
 
     _isSpeaking.value = false;
     // _lastChatResponse.value = '';
     await player.pause();
-  }
-
-  @override
-  void onInit() {
-    super.onInit();
   }
 
   bool get isSpeaking => _isSpeaking.value;

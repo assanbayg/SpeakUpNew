@@ -14,14 +14,14 @@ import 'package:speakup/util/helpers/helper_functions.dart';
 import 'package:speakup/util/helpers/supabase_helper.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class UserProfilePage extends StatefulWidget {
-  const UserProfilePage({super.key});
+class UserProfileScreen extends StatefulWidget {
+  const UserProfileScreen({super.key});
 
   @override
-  State<UserProfilePage> createState() => _UserProfilePageState();
+  State<UserProfileScreen> createState() => _UserProfileScreenState();
 }
 
-class _UserProfilePageState extends State<UserProfilePage> {
+class _UserProfileScreenState extends State<UserProfileScreen> {
   int _selectedIndex = 3;
   UserModel? userModel;
   bool isLoading = true;
@@ -64,13 +64,13 @@ class _UserProfilePageState extends State<UserProfilePage> {
         Get.to(const HomeScreen());
         break;
       case 1:
-        Get.to(ConverterScreen());
+        Get.to(const ConverterScreen());
         break;
       case 2:
         Get.to(const MapScreen(text: ""));
         break;
       case 3:
-        Get.to(const UserProfilePage());
+        Get.to(const UserProfileScreen());
         break;
     }
   }

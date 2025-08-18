@@ -2,21 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:speakup/common/widgets/appbar.dart';
 import 'package:speakup/features/speakup/controllers/speech_controller.dart';
+import 'package:speakup/features/speakup/controllers/text_to_speech_controller.dart';
+import 'package:speakup/features/speakup/screens/home_screen.dart';
 import 'package:speakup/features/speakup/screens/map_screen.dart';
-import 'package:speakup/util/constants/image_strings.dart';
+import 'package:speakup/features/speakup/screens/profile_screen.dart';
 import 'package:speakup/util/constants/sizes.dart';
 import 'package:speakup/util/device/device_utility.dart';
-import 'package:speakup/features/speakup/controllers/text_to_speech_controller.dart';
 import 'package:video_player/video_player.dart';
-import '../../../util/constants/colors.dart';
-import 'package:speakup/features/speakup/screens/home_screen.dart';
-import 'package:speakup/features/speakup/screens/profile_page.dart';
 
 class ConverterScreen extends StatefulWidget {
-  ConverterScreen({Key? key}) : super(key: key);
+  const ConverterScreen({super.key});
 
   @override
-  _ConverterScreenState createState() => _ConverterScreenState();
+  State<ConverterScreen> createState() => _ConverterScreenState();
 }
 
 class _ConverterScreenState extends State<ConverterScreen> {
@@ -36,16 +34,16 @@ class _ConverterScreenState extends State<ConverterScreen> {
     });
     switch (index) {
       case 0:
-        Get.to(HomeScreen());
+        Get.to(const HomeScreen());
         break;
       case 1:
-        Get.to(ConverterScreen());
+        Get.to(const ConverterScreen());
         break;
       case 2:
         Get.to(const MapScreen(text: ""));
         break;
       case 3:
-        Get.to(UserProfilePage());
+        Get.to(const UserProfileScreen());
         break;
     }
   }
@@ -53,7 +51,7 @@ class _ConverterScreenState extends State<ConverterScreen> {
   Widget _buildNavItem(String asset, String label, int index) {
     return GestureDetector(
       onTap: () => _onItemTapped(index),
-      child: Container(
+      child: SizedBox(
         width: MediaQuery.of(context).size.width / 4,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -114,7 +112,7 @@ class _ConverterScreenState extends State<ConverterScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: Container(
+      bottomNavigationBar: SizedBox(
         height: 60,
         child: ListView(
           scrollDirection: Axis.horizontal,
@@ -236,10 +234,10 @@ class _ConverterScreenState extends State<ConverterScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Padding(
-            padding: EdgeInsets.only(bottom: 40.0),
+            padding: const EdgeInsets.only(bottom: 40.0),
             child: IconButton(
               padding: const EdgeInsets.all(8),
-              icon: Icon(
+              icon: const Icon(
                 Icons.mic,
                 color: Colors.white,
               ),

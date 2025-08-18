@@ -72,7 +72,7 @@ class SHelperFunctions {
       builder: (BuildContext context) => Stack(
         children: <Widget>[
           Container(
-            color: Colors.black.withOpacity(0.5),
+            color: Colors.black.withValues(alpha: 0.5),
           ),
           const Center(
             child: CircularProgressIndicator(),

@@ -1,6 +1,6 @@
 name: speakup
 description: "A new Flutter project."
-publish_to: "none" # Remove this line if you wish to publish to pub.dev
+publish_to: "none"
 
 version: 1.0.0+2
 
@@ -15,11 +15,6 @@ dependencies:
   get: ^4.6.6
   image_picker: ^1.0.7
 
-  firebase_core: ^2.28.0
-  firebase_auth: ^4.19.0
-  cloud_firestore: ^4.16.0
-  firebase_storage: ^11.7.0
-  firebase_app_check: ^0.2.2
   dart_openai: ^5.1.0
   audioplayers: ^6.0.0
   video_player: ^2.8.6
@@ -48,5 +43,3 @@ flutter:
   assets:
     - .env
     - assets/
-    - assets/images/
-    - assets/images/logo.png
