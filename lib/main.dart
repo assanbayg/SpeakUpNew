@@ -17,7 +17,6 @@ Future main() async {
     anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
   );
 
-  // TODO: FIX when signing out and signing in, i get some TTS error
   Get.lazyPut(() => TextToSpeechController());
 
   runApp(const SpeakUp());

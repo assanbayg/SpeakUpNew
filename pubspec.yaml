@@ -27,6 +27,7 @@ dependencies:
   flutter_dotenv: ^5.2.1
   dio: ^5.9.0
   path_provider: ^2.1.5
+  record: ^6.1.2
 
 dev_dependencies:
   flutter_test:

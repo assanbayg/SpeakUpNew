@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 // DISABLED
@@ -50,7 +51,9 @@ class SpeechController extends GetxController {
     */
 
     // Temporary mock behavior
-    print("Speech recognition is temporarily disabled");
+    if (kDebugMode) {
+      print("Speech recognition is temporarily disabled");
+    }
   }
 
   void listen(bool onlyListen) async {
@@ -72,14 +75,18 @@ class SpeechController extends GetxController {
       // Temporary mock behavior for testing
       if (!_isListening.value) {
         _isListening.value = true;
-        print("Mock: Started listening...");
+        if (kDebugMode) {
+          print("Mock: Started listening...");
+        }
 
         // Simulate listening for 3 seconds then provide mock text
         Future.delayed(const Duration(seconds: 3), () {
           _isListening.value = false;
           listenText.value =
               "Привет, это тестовое сообщение"; // Mock Russian text
-          print("Mock: Stopped listening, generated mock text");
+          if (kDebugMode) {
+            print("Mock: Stopped listening, generated mock text");
+          }
           textConroller.generateText(listenText.value, onlyListen);
         });
       }
@@ -94,7 +101,9 @@ class SpeechController extends GetxController {
 
     // Mock behavior
     _isListening.value = false;
-    print("Mock: Stopped recognition");
+    if (kDebugMode) {
+      print("Mock: Stopped recognition");
+    }
   }
 
   @override
@@ -102,7 +111,9 @@ class SpeechController extends GetxController {
     // TEMPORARILY DISABLED
     // _speechAzure = AzureSpeechRecognition();
 
-    print("SpeechController initialized (Azure disabled)");
+    if (kDebugMode) {
+      print("SpeechController initialized (Azure disabled)");
+    }
     super.onInit();
   }
 
