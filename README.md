@@ -1,3 +1,0 @@
-# speakup
-
-SPEAKUP

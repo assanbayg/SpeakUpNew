@@ -15,7 +15,6 @@ dependencies:
   get: ^4.6.6
   image_picker: ^1.0.7
 
-  dart_openai: ^5.1.0
   audioplayers: ^6.0.0
   video_player: ^2.8.6
   permission_handler: ^11.3.1
@@ -42,4 +41,4 @@ flutter:
 
   assets:
     - .env
-    - assets/
+    - assets/images
