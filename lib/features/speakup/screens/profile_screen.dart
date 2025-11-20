@@ -215,9 +215,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
     if (user != null) {
       try {
-        // Call your FastAPI backend
         final response = await http.post(
-          Uri.parse("${dotenv.env['VAR_NAME']}/delete-user"),
+          Uri.parse("${dotenv.env['BACKEND_URL']}/delete-user"),
           headers: {"Content-Type": "application/json"},
           body: jsonEncode({"user_id": user.id}),
         );

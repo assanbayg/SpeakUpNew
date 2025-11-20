@@ -1,8 +1,12 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
-import 'package:dart_openai/dart_openai.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 
 class TextToSpeechController extends GetxController {
@@ -12,110 +16,178 @@ class TextToSpeechController extends GetxController {
   final player = AudioPlayer();
   final RxString _lastChatResponse = ''.obs;
 
+  String get backendUrl => dotenv.env['BACKEND_URL'] ?? 'http://localhost:8000';
+
   Future<void> generateText(String inputText, bool onlyListen) async {
     _isThinking.value = true;
+
     if (onlyListen) {
       _lastChatResponse.value = inputText;
       await speakText(inputText);
       return;
     }
-    OpenAI.apiKey = 'sk-proj-PolJysccKgf6teCVSl2vT3BlbkFJmWiAUYbiua0LRYlKZx5U';
-    final systemMessage = OpenAIChatCompletionChoiceMessageModel(
-      content: [
-        OpenAIChatCompletionChoiceMessageContentItemModel.text(
-          "Тебя зовут Спичи, это твое имя. Нужно чтобы бот поддерживал разговор (сonversional bot). Он отвечал на вопрос или утверждение от пользователя комментариями и поддерживал диалог, задавая какие то еще то наталкивающие вопросы. Это твой слоган: Привет! Меня зовут Спичи, и я готова с тобой общаться в любое время. Нажми на микрофон, задавай интересующие тебя вопросы или просто расскажи о том, как прошел твой день. Давай дружить и развиваться!",
-        ),
-      ],
-      role: OpenAIChatMessageRole.assistant,
-    );
 
-    final userMessage = OpenAIChatCompletionChoiceMessageModel(
-      content: [
-        OpenAIChatCompletionChoiceMessageContentItemModel.text(
-          inputText,
-        ),
-      ],
-      role: OpenAIChatMessageRole.user,
-    );
+    try {
+      final response = await http
+          .post(
+        Uri.parse('$backendUrl/chat/sync'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'messages': [
+            {
+              "role": "system",
+              "content":
+                  "Тебя зовут Спичи, это твое имя. Нужно чтобы бот поддерживал разговор (сonversional bot). Он отвечал на вопрос или утверждение от пользователя комментариями и поддерживал диалог, задавая какие то еще то наталкивающие вопросы. Это твой слоган: Привет! Меня зовут Спичи, и я готова с тобой общаться в любое время. Нажми на микрофон, задавай интересующие тебя вопросы или просто расскажи о том, как прошел твой день. Давай дружить и развиваться!",
+            },
+            {"role": "user", "content": inputText},
+          ],
+          'model': "qwen2.5:0.5b-instruct",
+        }),
+      )
+          .timeout(
+        const Duration(seconds: 30),
+        onTimeout: () {
+          throw TimeoutException('Request timed out');
+        },
+      );
 
-    final requestMessages = [
-      systemMessage,
-      userMessage,
-    ];
-
-    OpenAIChatCompletionModel chatCompletion =
-        await OpenAI.instance.chat.create(
-      model: "gpt-3.5-turbo-1106",
-      responseFormat: {"type": "text"},
-      seed: 6,
-      messages: requestMessages,
-      temperature: 0.2,
-      maxTokens: 500,
-    );
-
-    // Обработка ответа
-    String response =
-        chatCompletion.choices.first.message.content?.join() ?? '';
-    // print('Ответ от OpenAI: $response');
-
-    // print(chatCompletion.choices.first.message);
-    String text = '';
-    chatCompletion.choices.first.message.content?.forEach((element) {
-      text += element.toString();
-    });
-    List<String> words = text.split(" ");
-    String newText = words.skip(3).join(" ");
-    newText =
-        newText.substring(0, newText.length - 1); // Удаление последнего символа
-    // print(newText);
-    _lastChatResponse.value = newText;
-    await speakText(newText);
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        String responseText = '';
+        responseText = data['response'].toString();
+        _lastChatResponse.value = responseText;
+        await speakText(responseText);
+      } else {
+        throw Exception(
+            'Backend returned ${response.statusCode}: ${response.body}');
+      }
+    } on SocketException {
+      _isThinking.value = false;
+      Get.snackbar('Ошибка соединения', 'Не удается подключиться к серверу');
+    } on TimeoutException {
+      _isThinking.value = false;
+      Get.snackbar('Превышено время ожидания', 'Сервер не отвечает');
+    } catch (e) {
+      _isThinking.value = false;
+      Get.snackbar('Ошибка', 'Не удалось получить ответ: $e');
+      if (kDebugMode) {
+        print('Error in generateText: $e');
+      }
+    }
   }
 
   Future<void> speakText(String message) async {
-    // The speech request.
-    OpenAI.apiKey = 'sk-proj-PolJysccKgf6teCVSl2vT3BlbkFJmWiAUYbiua0LRYlKZx5U';
+    try {
+      Directory appDocDir = await getApplicationDocumentsDirectory();
+      String appDocPath = appDocDir.path;
 
-    Directory appDocDir = await getApplicationDocumentsDirectory();
-    String appDocPath = appDocDir.path;
+      // Call custom backend TTS endpoint
+      final response = await http
+          .post(
+        Uri.parse('$backendUrl/tts'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'text': message,
+        }),
+      )
+          .timeout(
+        const Duration(seconds: 30),
+        onTimeout: () {
+          throw TimeoutException('TTS request timed out');
+        },
+      );
 
-    File speechFile = await OpenAI.instance.audio.createSpeech(
-      model: "tts-1",
-      input: message,
-      voice: "nova",
-      responseFormat: OpenAIAudioSpeechResponseFormat.mp3,
-      outputDirectory: await Directory("$appDocPath/speechOutput").create(),
-      outputFileName: "anas",
-    );
-    // The file result.
-    // print(speechFile.path);
+      if (response.statusCode == 200) {
+        // Save audio file
+        final audioDir = Directory('$appDocPath/speechOutput');
+        if (!await audioDir.exists()) {
+          await audioDir.create(recursive: true);
+        }
 
-    await player.play(
-        DeviceFileSource(speechFile.path)); // will immediately start playing
-    await player.pause(); // immediately pause to get the duration
+        final audioFile = File(
+            '${audioDir.path}/speech_${DateTime.now().millisecondsSinceEpoch}.mp3');
+        await audioFile.writeAsBytes(response.bodyBytes);
 
-    final duration = player.getDuration(); // get the duration
+        // Play audio
+        await player.play(DeviceFileSource(audioFile.path));
+        await player.pause();
 
-    await player.seek(Duration.zero); // seek back to the start
-    await player.play(
-        DeviceFileSource(speechFile.path)); // will immediately start playing
-    _isThinking.value = false;
-    _isSpeaking.value = true;
+        final duration = player.getDuration();
+        await player.seek(Duration.zero);
+        await player.play(DeviceFileSource(audioFile.path));
 
-    Duration? durationValue = await duration;
-    if (durationValue != null) {
-      await Future.delayed(durationValue); // wait for the duration of the audio
+        _isThinking.value = false;
+        _isSpeaking.value = true;
+
+        Duration? durationValue = await duration;
+        if (durationValue != null) {
+          await Future.delayed(durationValue);
+        }
+
+        _isSpeaking.value = false;
+        await player.pause();
+
+        // Clean up old audio files to save space
+        _cleanupOldAudioFiles(audioDir);
+      } else {
+        throw Exception('TTS failed with status ${response.statusCode}');
+      }
+    } on SocketException {
+      _isThinking.value = false;
+      _isSpeaking.value = false;
+      Get.snackbar('Ошибка соединения', 'Не удается подключиться к серверу');
+    } on TimeoutException {
+      _isThinking.value = false;
+      _isSpeaking.value = false;
+      Get.snackbar('Превышено время ожидания', 'Сервер не отвечает');
+    } catch (e) {
+      _isThinking.value = false;
+      _isSpeaking.value = false;
+      Get.snackbar('Ошибка TTS', 'Не удалось озвучить текст: $e');
+      if (kDebugMode) {
+        print('Error in speakText: $e');
+      }
     }
+  }
 
-    _isSpeaking.value = false;
-    // _lastChatResponse.value = '';
-    await player.pause();
+  // Clean up audio files older than 1 hour to prevent storage bloat
+  void _cleanupOldAudioFiles(Directory audioDir) async {
+    try {
+      final files = audioDir.listSync();
+      final now = DateTime.now();
+
+      for (var file in files) {
+        if (file is File) {
+          final stat = await file.stat();
+          final age = now.difference(stat.modified);
+
+          if (age.inHours > 1) {
+            await file.delete();
+          }
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error cleaning up audio files: $e');
+      }
+    }
   }
 
   bool get isSpeaking => _isSpeaking.value;
   bool get isThinking => _isThinking.value;
   String get lastChatResponse => _lastChatResponse.value;
+
   set lastChatResponse(String value) {
     _lastChatResponse.value = value;
+  }
+
+  @override
+  void onClose() {
+    player.dispose();
+    super.onClose();
   }
 }
