@@ -23,27 +23,7 @@ class SAppBar extends StatelessWidget implements PreferredSizeWidget {
         surfaceTintColor: Colors.white,
         backgroundColor: Colors.white,
         centerTitle: false,
-        leading: IconButton(
-          style: IconButton.styleFrom(
-            backgroundColor: Colors.white,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-          ),
-          icon: SvgPicture.asset(
-            'assets/icons/Arrow_left.svg',
-            width: 24,
-            height: 24,
-            colorFilter: ColorFilter.mode(
-              Colors.grey.withValues(
-                alpha: .8,
-              ),
-              BlendMode.srcIn,
-            ),
-          ),
-          onPressed: () {
-            Get.back();
-          },
-        ),
+        automaticallyImplyLeading: false,
         title: Column(
           children: [
             Container(

@@ -19,11 +19,39 @@ class MicrophoneButton extends StatelessWidget {
 
     return Obx(() {
       final isListening = speechController.isListening;
-      final isActive = !textController.isThinking && !textController.isSpeaking;
+      final isThinking = textController.isThinking;
+      final isSpeaking = textController.isSpeaking;
+      final isActive = !isThinking && !isSpeaking;
+      final hasResponse = textController.lastChatResponse.isNotEmpty;
+
+      String hintText = '';
+      if (isListening) {
+        hintText = 'Говорите...';
+      } else if (isThinking) {
+        hintText = 'Ожидайте ответа...';
+      } else if (isSpeaking) {
+        hintText = 'Говорю ответ...';
+      } else if (hasResponse) {
+        hintText = 'Нажмите на микрофон, чтобы продолжить';
+      } else {
+        hintText = 'Нажмите на микрофон, чтобы начать';
+      }
 
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 20.0),
+            child: Text(
+              hintText,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: isActive ? Colors.grey.shade700 : Colors.grey.shade500,
+              ),
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.only(bottom: 40.0),
             child: GestureDetector(
@@ -78,13 +106,16 @@ class MicrophoneButton extends StatelessWidget {
                     ),
                   ),
                   child: Center(
-                    child: SvgPicture.asset(
-                      'assets/icons/Audio.svg',
-                      width: 60,
-                      height: 60,
-                      colorFilter: const ColorFilter.mode(
-                        Colors.white,
-                        BlendMode.srcIn,
+                    child: Opacity(
+                      opacity: isActive ? 1.0 : 0.5,
+                      child: SvgPicture.asset(
+                        'assets/icons/Audio.svg',
+                        width: 60,
+                        height: 60,
+                        colorFilter: const ColorFilter.mode(
+                          Colors.white,
+                          BlendMode.srcIn,
+                        ),
                       ),
                     ),
                   ),

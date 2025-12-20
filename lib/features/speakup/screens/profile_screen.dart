@@ -74,7 +74,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 20),
-              // Profile Avatar Card
               Container(
                 width: 180,
                 height: 180,
@@ -84,33 +83,47 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: [
-                      Colors.blue.shade100,
-                      Colors.purple.shade100,
+                      Colors.blue.shade300,
+                      Colors.purple.shade300,
                     ],
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.blue.withValues(alpha: 0.2),
-                      blurRadius: 20,
-                      spreadRadius: 5,
-                      offset: const Offset(0, 8),
+                      color: Colors.black.withValues(alpha: 0.15),
+                      blurRadius: 15,
+                      spreadRadius: 3,
+                      offset: const Offset(0, 5),
                     ),
                   ],
                 ),
-                padding: const EdgeInsets.all(20),
-                child: Container(
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.white,
-                  ),
-                  child: Center(
-                    child: SvgPicture.asset(
-                      'assets/icons/Person_fill.svg',
-                      width: 120,
-                      height: 120,
-                      colorFilter: ColorFilter.mode(
-                        Colors.grey.shade600,
-                        BlendMode.srcIn,
+                child: Center(
+                  child: Container(
+                    width: 140,
+                    height: 140,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white,
+                      border: Border.all(
+                        color: Colors.grey.shade200,
+                        width: 3,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.05),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Center(
+                      child: SvgPicture.asset(
+                        'assets/icons/Person_fill.svg',
+                        width: 100,
+                        height: 100,
+                        colorFilter: ColorFilter.mode(
+                          Colors.blueGrey.shade700,
+                          BlendMode.srcIn,
+                        ),
                       ),
                     ),
                   ),
@@ -195,7 +208,61 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   ],
                 ),
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 30),
+              // Logout Button
+              Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.blue.withValues(alpha: 0.2),
+                      blurRadius: 12,
+                      spreadRadius: 2,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: ElevatedButton(
+                  onPressed: () async {
+                    await SSupabaseHelper.auth.signOut();
+                    Get.offAll(const LoginScreen());
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    elevation: 0,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        'assets/icons/Out_right.svg',
+                        width: 20,
+                        height: 20,
+                        colorFilter: const ColorFilter.mode(
+                          Colors.white,
+                          BlendMode.srcIn,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      const Text(
+                        'Выйти из аккаунта',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
               // Delete Account Button
               Container(
                 width: double.infinity,

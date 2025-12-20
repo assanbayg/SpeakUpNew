@@ -13,7 +13,7 @@ class STheme {
     appBarTheme: const AppBarTheme(
       backgroundColor: Colors.transparent,
     ),
-    scaffoldBackgroundColor: const Color(0xFFE2E9F3),
+    // scaffoldBackgroundColor: const Color(0xFFE2E9F3),
     elevatedButtonTheme: SElevatedButtonTheme.lightElevatedButtonTheme,
     inputDecorationTheme: STextFormFieldTheme.lightInputDecorationTheme,
     textButtonTheme: STextButtonTheme.lightTextButtonTheme,
