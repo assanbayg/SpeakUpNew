@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:speakup/common/widgets/appbar.dart';
-import 'package:speakup/common/widgets/bottom_navigation_bar.dart';
 import 'package:speakup/common/widgets/bottom_sheet_widget.dart';
 import 'package:speakup/common/widgets/video_image_widget.dart';
 import 'package:speakup/features/speakup/controllers/speech_controller.dart';
@@ -22,8 +21,6 @@ class _HomeScreenState extends State<HomeScreen> {
       Get.put(TextToSpeechController());
 
   late final VideoPlayerController videoController;
-
-  static const int _selectedIndex = 0;
 
   @override
   void initState() {
@@ -56,9 +53,6 @@ class _HomeScreenState extends State<HomeScreen> {
             child: BottomSheetWidget(),
           ),
         ],
-      ),
-      bottomNavigationBar: const SBottomNavigationBar(
-        selectedIndex: _selectedIndex,
       ),
     );
   }

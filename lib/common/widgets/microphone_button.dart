@@ -18,35 +18,77 @@ class MicrophoneButton extends StatelessWidget {
     final textController = Get.find<TextToSpeechController>();
 
     return Obx(() {
+      final isListening = speechController.isListening;
+      final isActive = !textController.isThinking && !textController.isSpeaking;
+
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Padding(
             padding: const EdgeInsets.only(bottom: 40.0),
-            child: IconButton(
-              padding: const EdgeInsets.all(8),
-              icon: SvgPicture.asset(
-                'assets/icons/Audio.svg',
-                width: 80,
-                height: 80,
-                colorFilter: const ColorFilter.mode(
-                  Colors.white,
-                  BlendMode.srcIn,
+            child: GestureDetector(
+              onTap: isActive
+                  ? () {
+                      speechController.listen(onlyListen);
+                      textController.lastChatResponse = '';
+                    }
+                  : null,
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                width: 120,
+                height: 120,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: isListening
+                        ? [
+                            Colors.green.shade400,
+                            Colors.green.shade600,
+                          ]
+                        : [
+                            Colors.red.shade400,
+                            Colors.red.shade600,
+                          ],
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: (isListening ? Colors.green : Colors.red)
+                          .withValues(alpha: 0.4),
+                      blurRadius: 20,
+                      spreadRadius: 5,
+                      offset: const Offset(0, 8),
+                    ),
+                    BoxShadow(
+                      color: (isListening ? Colors.green : Colors.red)
+                          .withValues(alpha: 0.2),
+                      blurRadius: 10,
+                      spreadRadius: 2,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
                 ),
-              ),
-              iconSize: 80,
-              onPressed: () {
-                if (textController.isThinking || textController.isSpeaking) {
-                  return;
-                } else {
-                  speechController.listen(onlyListen);
-                  textController.lastChatResponse = '';
-                }
-              },
-              alignment: Alignment.center,
-              style: IconButton.styleFrom(
-                backgroundColor:
-                    speechController.isListening ? Colors.green : Colors.red,
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.3),
+                      width: 2,
+                    ),
+                  ),
+                  child: Center(
+                    child: SvgPicture.asset(
+                      'assets/icons/Audio.svg',
+                      width: 60,
+                      height: 60,
+                      colorFilter: const ColorFilter.mode(
+                        Colors.white,
+                        BlendMode.srcIn,
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ),
           ),

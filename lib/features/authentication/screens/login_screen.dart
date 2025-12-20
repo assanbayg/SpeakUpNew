@@ -43,7 +43,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   Text("SpeakUP",
                       style: Theme.of(context).textTheme.headlineMedium),
                   const Divider(
-                    color: Colors.black,
+                    color: SColors.borderSecondary,
+                    thickness: 1,
                     endIndent: SSizes.spaceBtwSections,
                     indent: SSizes.spaceBtwSections,
                   ),
@@ -54,6 +55,23 @@ class _LoginScreenState extends State<LoginScreen> {
                     controller: loginCtrl.email,
                     decoration: InputDecoration(
                       hintText: "Электронная почта ",
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14),
+                        borderSide:
+                            const BorderSide(color: SColors.borderPrimary),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14),
+                        borderSide:
+                            const BorderSide(color: SColors.borderSecondary),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14),
+                        borderSide:
+                            const BorderSide(color: SColors.primary, width: 1.4),
+                      ),
                       prefixIcon: SvgPicture.asset(
                         'assets/icons/Mail.svg',
                         width: 20,
@@ -67,13 +85,29 @@ class _LoginScreenState extends State<LoginScreen> {
                     controller: loginCtrl.password,
                     decoration: InputDecoration(
                       hintText: "Пароль",
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14),
+                        borderSide:
+                            const BorderSide(color: SColors.borderPrimary),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14),
+                        borderSide:
+                            const BorderSide(color: SColors.borderSecondary),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14),
+                        borderSide:
+                            const BorderSide(color: SColors.primary, width: 1.4),
+                      ),
                       prefixIcon: SvgPicture.asset(
                         'assets/icons/Protection.svg',
                         width: 20,
                         height: 20,
                         fit: BoxFit.scaleDown,
                       ),
-                      border: const OutlineInputBorder(),
                       suffixIcon: IconButton(
                         icon: SvgPicture.asset(
                           _obscureText

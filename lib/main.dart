@@ -3,7 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:speakup/features/authentication/screens/login_screen.dart';
 import 'package:speakup/features/speakup/controllers/text_to_speech_controller.dart';
-import 'package:speakup/features/speakup/screens/home_screen.dart';
+import 'package:speakup/features/speakup/screens/main_navigation_screen.dart';
 import 'package:speakup/util/helpers/supabase_helper.dart';
 import 'package:speakup/util/theme/theme.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -31,7 +31,7 @@ class SpeakUp extends StatelessWidget {
       theme: STheme.sTheme,
       debugShowCheckedModeBanner: false,
       home: SSupabaseHelper.currentUser != null
-          ? const HomeScreen()
+          ? const MainNavigationScreen()
           : const LoginScreen(),
     );
   }

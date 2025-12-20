@@ -3,7 +3,6 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:speakup/common/widgets/appbar.dart';
-import 'package:speakup/common/widgets/bottom_navigation_bar.dart';
 import 'package:speakup/util/data/marker_coords.dart';
 
 class MapScreen extends StatefulWidget {
@@ -17,7 +16,6 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   late final MapController mapController;
-  static const int _selectedIndex = 2;
 
   @override
   void initState() {
@@ -91,35 +89,67 @@ class _MapScreenState extends State<MapScreen> {
             top: 10.0,
             right: 10.0,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.1),
+                    blurRadius: 10,
+                    spreadRadius: 2,
+                    offset: const Offset(0, 4),
+                  ),
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.05),
+                    blurRadius: 5,
+                    spreadRadius: 1,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+                border: Border.all(
+                  color: Colors.grey.shade200,
+                  width: 1,
+                ),
               ),
               child: DropdownButton<String>(
                 value: dropdownValue,
                 onChanged: _onDropDownChanged,
                 underline: const SizedBox(),
-                icon: SvgPicture.asset(
-                  'assets/icons/Arrow_down.svg',
-                  width: 16,
-                  height: 16,
+                icon: Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: SvgPicture.asset(
+                    'assets/icons/Arrow_down.svg',
+                    width: 16,
+                    height: 16,
+                  ),
                 ),
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
+                dropdownColor: Colors.white,
                 items: <String>['Алматы', 'Астана']
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
-                    child: Text(value),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4.0),
+                      child: Text(
+                        value,
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
                   );
                 }).toList(),
               ),
             ),
           ),
         ],
-      ),
-      bottomNavigationBar: const SBottomNavigationBar(
-        selectedIndex: _selectedIndex,
       ),
     );
   }

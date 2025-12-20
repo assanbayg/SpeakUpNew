@@ -18,6 +18,10 @@ class SAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+        elevation: 2,
+        shadowColor: Colors.black.withValues(alpha: .08),
+        surfaceTintColor: Colors.white,
+        backgroundColor: Colors.white,
         centerTitle: false,
         leading: IconButton(
           style: IconButton.styleFrom(
@@ -46,12 +50,13 @@ class SAppBar extends StatelessWidget implements PreferredSizeWidget {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(
                   horizontal: SSizes.md, vertical: SSizes.sm / 2),
-              decoration: const BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(color: Colors.black),
-                ),
+              child: Text(
+                title,
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium
+                    ?.copyWith(fontWeight: FontWeight.w600),
               ),
-              child: Text(title),
             ),
           ],
         ),

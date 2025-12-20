@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:speakup/features/speakup/screens/home_screen.dart';
+import 'package:speakup/features/speakup/screens/main_navigation_screen.dart';
 import 'package:speakup/util/helpers/helper_functions.dart';
 import 'package:speakup/util/helpers/supabase_helper.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -50,7 +50,7 @@ class LoginController extends GetxController {
         SHelperFunctions.hideProgressIndicator();
         isLoading.value = false;
         SHelperFunctions.showSnackBar('Успешный вход в систему!');
-        Get.offAll(() => const HomeScreen());
+        Get.offAll(() => const MainNavigationScreen());
       }
     } on AuthException catch (e) {
       SHelperFunctions.hideProgressIndicator();

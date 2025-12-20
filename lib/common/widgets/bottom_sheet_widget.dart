@@ -15,12 +15,26 @@ class BottomSheetWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.only(
+        borderRadius: const BorderRadius.only(
           topRight: Radius.circular(30),
           topLeft: Radius.circular(30),
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 20,
+            spreadRadius: 5,
+            offset: const Offset(0, -5),
+          ),
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            spreadRadius: 2,
+            offset: const Offset(0, -2),
+          ),
+        ],
       ),
       height: SDeviceUtils.getScreenHeight(context) * .4,
       width: SDeviceUtils.getScreenWidth(context),

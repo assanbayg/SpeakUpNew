@@ -6,7 +6,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:speakup/common/widgets/appbar.dart';
-import 'package:speakup/common/widgets/bottom_navigation_bar.dart';
 import 'package:speakup/features/authentication/screens/login_screen.dart';
 import 'package:speakup/features/speakup/models/user_model.dart';
 import 'package:speakup/util/helpers/helper_functions.dart';
@@ -21,7 +20,6 @@ class UserProfileScreen extends StatefulWidget {
 }
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
-  static const int _selectedIndex = 3;
   UserModel? userModel;
   bool isLoading = true;
 
@@ -68,80 +66,190 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
     return Scaffold(
       appBar: const SAppBar(title: "Профиль", page: "Profile"),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SvgPicture.asset(
-              'assets/icons/Person_fill.svg',
-              width: 160,
-              height: 160,
-              colorFilter: const ColorFilter.mode(
-                Colors.grey,
-                BlendMode.srcIn,
-              ),
-            ),
-            const SizedBox(height: 20),
-            if (userModel?.displayName.isNotEmpty == true)
-              Text(
-                userModel!.displayName,
-                style: const TextStyle(
-                  fontSize: 22,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(height: 20),
+              // Profile Avatar Card
+              Container(
+                width: 180,
+                height: 180,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Colors.blue.shade100,
+                      Colors.purple.shade100,
+                    ],
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.blue.withValues(alpha: 0.2),
+                      blurRadius: 20,
+                      spreadRadius: 5,
+                      offset: const Offset(0, 8),
+                    ),
+                  ],
                 ),
-                textAlign: TextAlign.center,
+                padding: const EdgeInsets.all(20),
+                child: Container(
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white,
+                  ),
+                  child: Center(
+                    child: SvgPicture.asset(
+                      'assets/icons/Person_fill.svg',
+                      width: 120,
+                      height: 120,
+                      colorFilter: ColorFilter.mode(
+                        Colors.grey.shade600,
+                        BlendMode.srcIn,
+                      ),
+                    ),
+                  ),
+                ),
               ),
-            const SizedBox(height: 10),
-            Text(
-              user.email ?? 'Нет электронной почты',
-              style: const TextStyle(
-                fontSize: 18,
-                color: Colors.black,
+              const SizedBox(height: 30),
+              // User Info Card
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.08),
+                      blurRadius: 15,
+                      spreadRadius: 2,
+                      offset: const Offset(0, 5),
+                    ),
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.04),
+                      blurRadius: 8,
+                      spreadRadius: 1,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    if (userModel?.displayName.isNotEmpty == true)
+                      Text(
+                        userModel!.displayName,
+                        style: const TextStyle(
+                          fontSize: 24,
+                          color: Colors.black87,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 0.5,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    if (userModel?.displayName.isNotEmpty == true)
+                      const SizedBox(height: 12),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 10,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade50,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: Colors.grey.shade200,
+                          width: 1,
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.email_outlined,
+                            size: 18,
+                            color: Colors.grey.shade600,
+                          ),
+                          const SizedBox(width: 8),
+                          Flexible(
+                            child: Text(
+                              user.email ?? 'Нет электронной почты',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey.shade700,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              textAlign: TextAlign.center,
-            ),
-            const Spacer(),
-            Center(
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 3.0, horizontal: 6.0),
+              const SizedBox(height: 40),
+              // Delete Account Button
+              Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.red.withValues(alpha: 0.3),
+                      blurRadius: 12,
+                      spreadRadius: 2,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
                 child: ElevatedButton(
                   onPressed: () => _confirmDeleteAccount(),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
+                    elevation: 0,
                   ),
                   child: Row(
-                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SvgPicture.asset(
                         'assets/icons/Delete.svg',
-                        width: 16,
-                        height: 16,
+                        width: 20,
+                        height: 20,
                         colorFilter: const ColorFilter.mode(
                           Colors.white,
                           BlendMode.srcIn,
                         ),
                       ),
+                      const SizedBox(width: 12),
                       const Text(
                         'Удалить аккаунт',
-                        style: TextStyle(fontSize: 12),
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0.5,
+                        ),
                       ),
                     ],
                   ),
                 ),
               ),
-            ),
-          ],
+              const SizedBox(height: 20),
+            ],
+          ),
         ),
-      ),
-      bottomNavigationBar: const SBottomNavigationBar(
-        selectedIndex: _selectedIndex,
       ),
     );
   }
