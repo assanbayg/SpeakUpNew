@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:speakup/features/speakup/controllers/text_to_speech_controller.dart';
 import 'package:speakup/features/speakup/screens/converter_screen.dart';
@@ -47,7 +48,17 @@ class SBottomNavigationBar extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(asset, width: 24, height: 24),
+            SvgPicture.asset(
+              asset,
+              width: 24,
+              height: 24,
+              colorFilter: ColorFilter.mode(
+                Colors.grey.withValues(
+                  alpha: .7,
+                ),
+                BlendMode.srcIn,
+              ),
+            ),
             Text(
               label,
               style: TextStyle(
@@ -68,10 +79,10 @@ class SBottomNavigationBar extends StatelessWidget {
         child: ListView(
           scrollDirection: Axis.horizontal,
           children: [
-            _buildNavItem(context, 'assets/images/chat.png', 'Спичи', 0),
-            _buildNavItem(context, 'assets/images/convert.png', 'Конвертер', 1),
-            _buildNavItem(context, 'assets/images/marker.png', 'Центры', 2),
-            _buildNavItem(context, 'assets/images/profile.png', 'Профайл', 3),
+            _buildNavItem(context, 'assets/icons/Message.svg', 'Спичи', 0),
+            _buildNavItem(context, 'assets/icons/Convert.svg', 'Конвертер', 1),
+            _buildNavItem(context, 'assets/icons/Map.svg', 'Центры', 2),
+            _buildNavItem(context, 'assets/icons/Profile.svg', 'Профайл', 3),
           ],
         ),
       ),

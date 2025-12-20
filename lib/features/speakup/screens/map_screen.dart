@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:get/get.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:speakup/common/widgets/appbar.dart';
-import 'package:speakup/features/speakup/screens/converter_screen.dart';
-import 'package:speakup/features/speakup/screens/home_screen.dart';
-import 'package:speakup/features/speakup/screens/profile_screen.dart';
+import 'package:speakup/common/widgets/bottom_navigation_bar.dart';
 import 'package:speakup/util/data/marker_coords.dart';
 
 class MapScreen extends StatefulWidget {
@@ -19,7 +17,7 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   late final MapController mapController;
-  int _selectedIndex = 2;
+  static const int _selectedIndex = 2;
 
   @override
   void initState() {
@@ -27,46 +25,6 @@ class _MapScreenState extends State<MapScreen> {
     mapController = MapController();
   }
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-    switch (index) {
-      case 0:
-        Get.to(const HomeScreen());
-        break;
-      case 1:
-        Get.to(const ConverterScreen());
-        break;
-      case 2:
-        Get.to(const MapScreen(text: ""));
-        break;
-      case 3:
-        Get.to(const UserProfileScreen());
-        break;
-    }
-  }
-
-  Widget _buildNavItem(String asset, String label, int index) {
-    return GestureDetector(
-      onTap: () => _onItemTapped(index),
-      child: SizedBox(
-        width: MediaQuery.of(context).size.width / 4,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Image.asset(asset, width: 24, height: 24),
-            Text(
-              label,
-              style: TextStyle(
-                color: _selectedIndex == index ? Colors.blue : Colors.grey,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
   String dropdownValue = 'Алматы';
 
@@ -90,7 +48,15 @@ class _MapScreenState extends State<MapScreen> {
               point: point,
               width: 40,
               height: 40,
-              child: const Icon(Icons.location_on, color: Colors.red, size: 30),
+              child: SvgPicture.asset(
+                'assets/icons/Location_fill.svg',
+                width: 30,
+                height: 30,
+                colorFilter: const ColorFilter.mode(
+                  Colors.red,
+                  BlendMode.srcIn,
+                ),
+              ),
             ))
         .toList();
 
@@ -124,33 +90,36 @@ class _MapScreenState extends State<MapScreen> {
           Positioned(
             top: 10.0,
             right: 10.0,
-            child: DropdownButton<String>(
-              value: dropdownValue,
-              onChanged: _onDropDownChanged,
-              items: <String>['Алматы', 'Астана']
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey),
+              ),
+              child: DropdownButton<String>(
+                value: dropdownValue,
+                onChanged: _onDropDownChanged,
+                underline: const SizedBox(),
+                icon: SvgPicture.asset(
+                  'assets/icons/Arrow_down.svg',
+                  width: 16,
+                  height: 16,
+                ),
+                items: <String>['Алматы', 'Астана']
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
             ),
           ),
         ],
       ),
-      bottomNavigationBar: SafeArea(
-        child: SizedBox(
-          height: 60,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            children: <Widget>[
-              _buildNavItem('assets/images/chat.png', 'Спичи', 0),
-              _buildNavItem('assets/images/convert.png', 'Конвертер', 1),
-              _buildNavItem('assets/images/marker.png', 'Центры', 2),
-              _buildNavItem('assets/images/profile.png', 'Профайл', 3),
-            ],
-          ),
-        ),
+      bottomNavigationBar: const SBottomNavigationBar(
+        selectedIndex: _selectedIndex,
       ),
     );
   }

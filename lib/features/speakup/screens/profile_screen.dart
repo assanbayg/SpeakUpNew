@@ -2,14 +2,13 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:speakup/common/widgets/appbar.dart';
+import 'package:speakup/common/widgets/bottom_navigation_bar.dart';
 import 'package:speakup/features/authentication/screens/login_screen.dart';
 import 'package:speakup/features/speakup/models/user_model.dart';
-import 'package:speakup/features/speakup/screens/converter_screen.dart';
-import 'package:speakup/features/speakup/screens/home_screen.dart';
-import 'package:speakup/features/speakup/screens/map_screen.dart';
 import 'package:speakup/util/helpers/helper_functions.dart';
 import 'package:speakup/util/helpers/supabase_helper.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -22,7 +21,7 @@ class UserProfileScreen extends StatefulWidget {
 }
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
-  int _selectedIndex = 3;
+  static const int _selectedIndex = 3;
   UserModel? userModel;
   bool isLoading = true;
 
@@ -55,47 +54,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     }
   }
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-    switch (index) {
-      case 0:
-        Get.to(const HomeScreen());
-        break;
-      case 1:
-        Get.to(const ConverterScreen());
-        break;
-      case 2:
-        Get.to(const MapScreen(text: ""));
-        break;
-      case 3:
-        Get.to(const UserProfileScreen());
-        break;
-    }
-  }
-
-  Widget _buildNavItem(String asset, String label, int index) {
-    return GestureDetector(
-      onTap: () => _onItemTapped(index),
-      child: SizedBox(
-        width: MediaQuery.of(context).size.width / 4,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Image.asset(asset, width: 24, height: 24),
-            Text(
-              label,
-              style: TextStyle(
-                color: _selectedIndex == index ? Colors.blue : Colors.grey,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final User? user = SSupabaseHelper.currentUser;
@@ -116,10 +74,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const CircleAvatar(
-              radius: 80,
-              backgroundColor: Colors.grey,
-              child: Icon(Icons.person, size: 80, color: Colors.white),
+            SvgPicture.asset(
+              'assets/icons/Person_fill.svg',
+              width: 160,
+              height: 160,
+              colorFilter: const ColorFilter.mode(
+                Colors.grey,
+                BlendMode.srcIn,
+              ),
             ),
             const SizedBox(height: 20),
             if (userModel?.displayName.isNotEmpty == true)
@@ -144,7 +106,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             const Spacer(),
             Center(
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 3.0),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 3.0, horizontal: 6.0),
                 child: ElevatedButton(
                   onPressed: () => _confirmDeleteAccount(),
                   style: ElevatedButton.styleFrom(
@@ -153,13 +116,23 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       borderRadius: BorderRadius.circular(16),
                     ),
                   ),
-                  child: const Padding(
-                    padding:
-                        EdgeInsets.symmetric(vertical: 3.0, horizontal: 3.0),
-                    child: Text(
-                      'Удалить аккаунт',
-                      style: TextStyle(fontSize: 12),
-                    ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SvgPicture.asset(
+                        'assets/icons/Delete.svg',
+                        width: 16,
+                        height: 16,
+                        colorFilter: const ColorFilter.mode(
+                          Colors.white,
+                          BlendMode.srcIn,
+                        ),
+                      ),
+                      const Text(
+                        'Удалить аккаунт',
+                        style: TextStyle(fontSize: 12),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -167,19 +140,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: SafeArea(
-        child: SizedBox(
-          height: 60,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            children: <Widget>[
-              _buildNavItem('assets/images/chat.png', 'Спичи', 0),
-              _buildNavItem('assets/images/convert.png', 'Конвертер', 1),
-              _buildNavItem('assets/images/marker.png', 'Центры', 2),
-              _buildNavItem('assets/images/profile.png', 'Профайл', 3),
-            ],
-          ),
-        ),
+      bottomNavigationBar: const SBottomNavigationBar(
+        selectedIndex: _selectedIndex,
       ),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:speakup/features/authentication/screens/login_screen.dart';
 import 'package:speakup/util/constants/sizes.dart';
@@ -24,7 +25,17 @@ class SAppBar extends StatelessWidget implements PreferredSizeWidget {
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
           ),
-          icon: const Icon(Icons.arrow_back),
+          icon: SvgPicture.asset(
+            'assets/icons/Arrow_left.svg',
+            width: 24,
+            height: 24,
+            colorFilter: ColorFilter.mode(
+              Colors.grey.withValues(
+                alpha: .8,
+              ),
+              BlendMode.srcIn,
+            ),
+          ),
           onPressed: () {
             Get.back();
           },
@@ -47,7 +58,11 @@ class SAppBar extends StatelessWidget implements PreferredSizeWidget {
         actions: page == 'Profile'
             ? <Widget>[
                 IconButton(
-                  icon: const Icon(Icons.logout),
+                  icon: SvgPicture.asset(
+                    'assets/icons/Out_right.svg',
+                    width: 24,
+                    height: 24,
+                  ),
                   onPressed: () async {
                     await SSupabaseHelper.auth.signOut();
                     Get.offAll(const LoginScreen());

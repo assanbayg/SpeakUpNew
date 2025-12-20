@@ -5,7 +5,12 @@ import 'package:speakup/util/constants/sizes.dart';
 import 'package:speakup/util/device/device_utility.dart';
 
 class BottomSheetWidget extends StatelessWidget {
-  const BottomSheetWidget({super.key});
+  const BottomSheetWidget({
+    super.key,
+    this.onlyListen = false,
+  });
+
+  final bool onlyListen;
 
   @override
   Widget build(BuildContext context) {
@@ -19,9 +24,9 @@ class BottomSheetWidget extends StatelessWidget {
       ),
       height: SDeviceUtils.getScreenHeight(context) * .4,
       width: SDeviceUtils.getScreenWidth(context),
-      child: const Column(
+      child: Column(
         children: [
-          Expanded(
+          const Expanded(
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -32,8 +37,8 @@ class BottomSheetWidget extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: SSizes.spaceBtwSections),
-          MicrophoneButton(),
+          const SizedBox(height: SSizes.spaceBtwSections),
+          MicrophoneButton(onlyListen: onlyListen),
         ],
       ),
     );

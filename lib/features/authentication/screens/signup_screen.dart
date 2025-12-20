@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:speakup/common/widgets/appbar.dart';
 import 'package:speakup/features/authentication/controllers/signup_controller.dart';
 import 'package:speakup/util/constants/sizes.dart';
 import 'package:speakup/util/device/device_utility.dart';
@@ -12,23 +14,9 @@ class SignUpScreen extends StatelessWidget {
     final SignUpController signUpCtrl = Get.put(SignUpController());
 
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: SSizes.md, vertical: SSizes.sm / 2),
-              decoration: const BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(color: Colors.black),
-                ),
-              ),
-              child: const Text("Завести аккаунт"),
-            ),
-          ],
-        ),
-        backgroundColor: Colors.transparent,
+      appBar: const SAppBar(
+        title: "Завести аккаунт",
+        page: "SignUp",
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -43,16 +31,27 @@ class SignUpScreen extends StatelessWidget {
                   children: [
                     TextFormField(
                       controller: signUpCtrl.fullName,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         hintText: "ФИО",
-                        prefixIcon: Icon(Icons.person_outlined),
+                        prefixIcon: SvgPicture.asset(
+                          'assets/icons/Person.svg',
+                          width: 20,
+                          height: 20,
+                          fit: BoxFit.scaleDown,
+                        ),
                       ),
                     ),
                     const SizedBox(height: SSizes.spaceBtwInputFields),
                     TextFormField(
                       controller: signUpCtrl.email,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         hintText: "Электронная почта",
+                        prefixIcon: SvgPicture.asset(
+                          'assets/icons/Mail.svg',
+                          width: 20,
+                          height: 20,
+                          fit: BoxFit.scaleDown,
+                        ),
                       ),
                     ),
                     const SizedBox(height: SSizes.spaceBtwInputFields),
@@ -61,12 +60,19 @@ class SignUpScreen extends StatelessWidget {
                           obscureText: !signUpCtrl.isPasswordVisible.value,
                           decoration: InputDecoration(
                             hintText: "Пароль",
-                            prefixIcon: const Icon(Icons.lock_outline),
+                            prefixIcon: SvgPicture.asset(
+                              'assets/icons/Protection.svg',
+                              width: 20,
+                              height: 20,
+                              fit: BoxFit.scaleDown,
+                            ),
                             suffixIcon: IconButton(
-                              icon: Icon(
+                              icon: SvgPicture.asset(
                                 signUpCtrl.isPasswordVisible.value
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
+                                    ? 'assets/icons/View.svg'
+                                    : 'assets/icons/Not_view.svg',
+                                width: 20,
+                                height: 20,
                               ),
                               onPressed: () {
                                 signUpCtrl.isPasswordVisible.value =
@@ -81,12 +87,19 @@ class SignUpScreen extends StatelessWidget {
                           obscureText: !signUpCtrl.isRePasswordVisible.value,
                           decoration: InputDecoration(
                             hintText: "Подтвердите пароль",
-                            prefixIcon: const Icon(Icons.lock_outline),
+                            prefixIcon: SvgPicture.asset(
+                              'assets/icons/Protection.svg',
+                              width: 20,
+                              height: 20,
+                              fit: BoxFit.scaleDown,
+                            ),
                             suffixIcon: IconButton(
-                              icon: Icon(
+                              icon: SvgPicture.asset(
                                 signUpCtrl.isRePasswordVisible.value
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
+                                    ? 'assets/icons/View.svg'
+                                    : 'assets/icons/Not_view.svg',
+                                width: 20,
+                                height: 20,
                               ),
                               onPressed: () {
                                 signUpCtrl.isRePasswordVisible.value =
@@ -98,7 +111,7 @@ class SignUpScreen extends StatelessWidget {
                     const SizedBox(height: SSizes.spaceBtwSections),
                     SizedBox(
                       width: SDeviceUtils.getScreenWidth(context) * .8,
-                      child: ElevatedButton(
+                      child: ElevatedButton.icon(
                           onPressed: () => signUpCtrl.signUp(
                                 context,
                                 fullName: signUpCtrl.fullName.text,
@@ -106,7 +119,16 @@ class SignUpScreen extends StatelessWidget {
                                 password: signUpCtrl.password.text,
                                 rePassword: signUpCtrl.rePassword.text,
                               ),
-                          child: const Text("SIGN UP")),
+                          icon: SvgPicture.asset(
+                            'assets/icons/Add_Person.svg',
+                            width: 20,
+                            height: 20,
+                            colorFilter: const ColorFilter.mode(
+                              Colors.white,
+                              BlendMode.srcIn,
+                            ),
+                          ),
+                          label: const Text("SIGN UP")),
                     ),
                     const SizedBox(height: SSizes.spaceBtwSections / 2),
                   ],

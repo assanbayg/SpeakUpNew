@@ -9,6 +9,7 @@ class STheme {
   static ThemeData sTheme = ThemeData(
     useMaterial3: true,
     brightness: Brightness.light,
+    fontFamily: 'Quicksand',
     appBarTheme: const AppBarTheme(
       backgroundColor: Colors.transparent,
     ),
@@ -23,5 +24,6 @@ class STheme {
   static ThemeData darkTheme = ThemeData(
     useMaterial3: true,
     brightness: Brightness.dark,
+    fontFamily: 'Quicksand',
   );
 }

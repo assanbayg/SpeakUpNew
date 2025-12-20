@@ -23,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   late final VideoPlayerController videoController;
 
-  final int _selectedIndex = 0;
+  static const int _selectedIndex = 0;
 
   @override
   void initState() {
@@ -44,7 +44,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildAppBar(),
+      appBar: const SAppBar(
+        page: "Home",
+        title: "Привет, я Спичи!",
+      ),
       body: Stack(
         children: [
           buildBody(),
@@ -54,16 +57,9 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: SBottomNavigationBar(
+      bottomNavigationBar: const SBottomNavigationBar(
         selectedIndex: _selectedIndex,
       ),
-    );
-  }
-
-  SAppBar buildAppBar() {
-    return const SAppBar(
-      page: "Home",
-      title: "Привет, я Спичи!",
     );
   }
 

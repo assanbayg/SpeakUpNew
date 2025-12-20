@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:speakup/features/authentication/controllers/login_controller.dart';
 import 'package:speakup/features/authentication/screens/signup_screen.dart';
@@ -51,19 +52,35 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   TextFormField(
                     controller: loginCtrl.email,
-                    decoration:
-                        const InputDecoration(hintText: "Электронная почта "),
+                    decoration: InputDecoration(
+                      hintText: "Электронная почта ",
+                      prefixIcon: SvgPicture.asset(
+                        'assets/icons/Mail.svg',
+                        width: 20,
+                        height: 20,
+                        fit: BoxFit.scaleDown,
+                      ),
+                    ),
                   ),
                   const SizedBox(height: SSizes.spaceBtwInputFields),
                   TextFormField(
                     controller: loginCtrl.password,
                     decoration: InputDecoration(
-                        hintText: "Пароль",
-                        prefixIcon: const Icon(Icons.lock_outline),
+                      hintText: "Пароль",
+                      prefixIcon: SvgPicture.asset(
+                        'assets/icons/Protection.svg',
+                        width: 20,
+                        height: 20,
+                        fit: BoxFit.scaleDown,
+                      ),
                       border: const OutlineInputBorder(),
                       suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscureText ? Icons.visibility_off : Icons.visibility,
+                        icon: SvgPicture.asset(
+                          _obscureText
+                              ? 'assets/icons/Not_view.svg'
+                              : 'assets/icons/View.svg',
+                          width: 20,
+                          height: 20,
                         ),
                         onPressed: () {
                           setState(() {
@@ -77,13 +94,22 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: SSizes.spaceBtwSections),
                   SizedBox(
                       width: SDeviceUtils.getScreenWidth(context) * .8,
-                      child: ElevatedButton(
+                      child: ElevatedButton.icon(
                           onPressed: () => loginCtrl.login(
                                 context,
                                 email: loginCtrl.email.text.toString(),
                                 password: loginCtrl.password.text.toString(),
                               ),
-                          child: const Text("LOG IN"))),
+                          icon: SvgPicture.asset(
+                            'assets/icons/Arrow_right.svg',
+                            width: 20,
+                            height: 20,
+                            colorFilter: const ColorFilter.mode(
+                              Colors.white,
+                              BlendMode.srcIn,
+                            ),
+                          ),
+                          label: const Text("LOG IN"))),
                   const SizedBox(height: SSizes.spaceBtwSections / 2),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
