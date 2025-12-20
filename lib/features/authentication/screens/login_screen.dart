@@ -69,14 +69,18 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(14),
-                        borderSide:
-                            const BorderSide(color: SColors.primary, width: 1.4),
+                        borderSide: const BorderSide(
+                            color: SColors.primary, width: 1.4),
                       ),
                       prefixIcon: SvgPicture.asset(
                         'assets/icons/Mail.svg',
                         width: 20,
                         height: 20,
                         fit: BoxFit.scaleDown,
+                        colorFilter: const ColorFilter.mode(
+                          SColors.primary,
+                          BlendMode.srcIn,
+                        ),
                       ),
                     ),
                   ),
@@ -99,14 +103,18 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(14),
-                        borderSide:
-                            const BorderSide(color: SColors.primary, width: 1.4),
+                        borderSide: const BorderSide(
+                            color: SColors.primary, width: 1.4),
                       ),
                       prefixIcon: SvgPicture.asset(
                         'assets/icons/Protection.svg',
                         width: 20,
                         height: 20,
                         fit: BoxFit.scaleDown,
+                        colorFilter: const ColorFilter.mode(
+                          SColors.primary,
+                          BlendMode.srcIn,
+                        ),
                       ),
                       suffixIcon: IconButton(
                         icon: SvgPicture.asset(
@@ -115,6 +123,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               : 'assets/icons/View.svg',
                           width: 20,
                           height: 20,
+                          colorFilter: const ColorFilter.mode(
+                            SColors.darkGrey,
+                            BlendMode.srcIn,
+                          ),
                         ),
                         onPressed: () {
                           setState(() {
@@ -155,7 +167,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             Get.to(() => const SignUpScreen());
                           },
                           child: Text(
-                            "SignUp",
+                            "Создать аккаунт",
                             style: Theme.of(context)
                                 .textTheme
                                 .titleLarge

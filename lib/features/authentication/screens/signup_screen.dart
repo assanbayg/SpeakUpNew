@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:speakup/common/widgets/appbar.dart';
 import 'package:speakup/features/authentication/controllers/signup_controller.dart';
+import 'package:speakup/util/constants/colors.dart';
 import 'package:speakup/util/constants/sizes.dart';
 import 'package:speakup/util/device/device_utility.dart';
 
@@ -15,7 +16,7 @@ class SignUpScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: const SAppBar(
-        title: "Завести аккаунт",
+        title: "Создать аккаунт",
         page: "SignUp",
       ),
       body: Center(
@@ -38,6 +39,10 @@ class SignUpScreen extends StatelessWidget {
                           width: 20,
                           height: 20,
                           fit: BoxFit.scaleDown,
+                          colorFilter: const ColorFilter.mode(
+                            SColors.primary,
+                            BlendMode.srcIn,
+                          ),
                         ),
                       ),
                     ),
@@ -51,6 +56,10 @@ class SignUpScreen extends StatelessWidget {
                           width: 20,
                           height: 20,
                           fit: BoxFit.scaleDown,
+                          colorFilter: const ColorFilter.mode(
+                            SColors.primary,
+                            BlendMode.srcIn,
+                          ),
                         ),
                       ),
                     ),
@@ -65,6 +74,10 @@ class SignUpScreen extends StatelessWidget {
                               width: 20,
                               height: 20,
                               fit: BoxFit.scaleDown,
+                              colorFilter: const ColorFilter.mode(
+                                SColors.primary,
+                                BlendMode.srcIn,
+                              ),
                             ),
                             suffixIcon: IconButton(
                               icon: SvgPicture.asset(
@@ -73,6 +86,10 @@ class SignUpScreen extends StatelessWidget {
                                     : 'assets/icons/Not_view.svg',
                                 width: 20,
                                 height: 20,
+                                colorFilter: const ColorFilter.mode(
+                                  SColors.darkGrey,
+                                  BlendMode.srcIn,
+                                ),
                               ),
                               onPressed: () {
                                 signUpCtrl.isPasswordVisible.value =
@@ -92,6 +109,10 @@ class SignUpScreen extends StatelessWidget {
                               width: 20,
                               height: 20,
                               fit: BoxFit.scaleDown,
+                              colorFilter: const ColorFilter.mode(
+                                SColors.primary,
+                                BlendMode.srcIn,
+                              ),
                             ),
                             suffixIcon: IconButton(
                               icon: SvgPicture.asset(
@@ -100,6 +121,10 @@ class SignUpScreen extends StatelessWidget {
                                     : 'assets/icons/Not_view.svg',
                                 width: 20,
                                 height: 20,
+                                colorFilter: const ColorFilter.mode(
+                                  SColors.darkGrey,
+                                  BlendMode.srcIn,
+                                ),
                               ),
                               onPressed: () {
                                 signUpCtrl.isRePasswordVisible.value =

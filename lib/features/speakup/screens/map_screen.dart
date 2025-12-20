@@ -15,6 +15,12 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
+  static const LatLng _almaty = LatLng(43.270447, 76.887133);
+  static const LatLng _astana = LatLng(51.140712, 71.427101);
+  static const double _defaultZoom = 12.0;
+  static const double _minZoom = 3.0;
+  static const double _maxZoom = 18.0;
+
   late final MapController mapController;
 
   @override
@@ -23,20 +29,34 @@ class _MapScreenState extends State<MapScreen> {
     mapController = MapController();
   }
 
-
   String dropdownValue = 'Алматы';
 
   void _onDropDownChanged(String? city) {
     setState(() {
       dropdownValue = city!;
-      LatLng target;
-      if (city == 'Алматы') {
-        target = const LatLng(43.270447, 76.887133);
-      } else {
-        target = const LatLng(51.140712, 71.427101);
-      }
-      mapController.move(target, 12.0);
+      final target = _cityToLatLng(city);
+      mapController.move(target, _defaultZoom);
     });
+  }
+
+  LatLng _cityToLatLng(String city) {
+    return city == 'Алматы' ? _almaty : _astana;
+  }
+
+  void _zoomBy(double delta) {
+    final camera = mapController.camera;
+    final nextZoom = (camera.zoom + delta).clamp(_minZoom, _maxZoom);
+    mapController.move(camera.center, nextZoom);
+  }
+
+  void _resetView() {
+    final target = _cityToLatLng(dropdownValue);
+    mapController.move(target, _defaultZoom);
+    mapController.rotate(0.0); // Reset to North/South orientation
+  }
+
+  void _resetOrientation() {
+    mapController.rotate(0.0);
   }
 
   @override
@@ -149,7 +169,91 @@ class _MapScreenState extends State<MapScreen> {
               ),
             ),
           ),
+          Positioned(
+            bottom: 20.0,
+            right: 15.0,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(14),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.08),
+                    blurRadius: 12,
+                    spreadRadius: 2,
+                    offset: const Offset(0, 6),
+                  ),
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.04),
+                    blurRadius: 6,
+                    spreadRadius: 1,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+                border: Border.all(color: Colors.grey.shade200),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _MapActionButton(
+                    icon: Icons.add,
+                    tooltip: 'Приблизить',
+                    onTap: () => _zoomBy(0.8),
+                  ),
+                  _MapActionButton(
+                    icon: Icons.remove,
+                    tooltip: 'Отдалить',
+                    onTap: () => _zoomBy(-0.8),
+                  ),
+                  _MapActionButton(
+                    icon: Icons.home_rounded,
+                    tooltip: 'Вернуть на выбранный город',
+                    onTap: _resetView,
+                  ),
+                  _MapActionButton(
+                    icon: Icons.explore,
+                    tooltip: 'Вернуть ориентацию на Север',
+                    onTap: _resetOrientation,
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
+      ),
+    );
+  }
+}
+
+class _MapActionButton extends StatelessWidget {
+  const _MapActionButton({
+    required this.icon,
+    required this.tooltip,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String tooltip;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          child: Tooltip(
+            message: tooltip,
+            child: Icon(
+              icon,
+              size: 22,
+              color: Colors.black87,
+            ),
+          ),
+        ),
       ),
     );
   }
