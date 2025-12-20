@@ -138,16 +138,18 @@ class _MapScreenState extends State<MapScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: SizedBox(
-        height: 60,
-        child: ListView(
-          scrollDirection: Axis.horizontal,
-          children: <Widget>[
-            _buildNavItem('assets/images/chat.png', 'Спичи', 0),
-            _buildNavItem('assets/images/convert.png', 'Конвертер', 1),
-            _buildNavItem('assets/images/marker.png', 'Центры', 2),
-            _buildNavItem('assets/images/profile.png', 'Профайл', 3),
-          ],
+      bottomNavigationBar: SafeArea(
+        child: SizedBox(
+          height: 60,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            children: <Widget>[
+              _buildNavItem('assets/images/chat.png', 'Спичи', 0),
+              _buildNavItem('assets/images/convert.png', 'Конвертер', 1),
+              _buildNavItem('assets/images/marker.png', 'Центры', 2),
+              _buildNavItem('assets/images/profile.png', 'Профайл', 3),
+            ],
+          ),
         ),
       ),
     );
