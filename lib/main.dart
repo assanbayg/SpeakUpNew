@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:speakup/features/authentication/screens/login_screen.dart';
+import 'package:speakup/features/speakup/controllers/sprite_controller.dart';
 import 'package:speakup/features/speakup/controllers/text_to_speech_controller.dart';
 import 'package:speakup/features/speakup/screens/main_navigation_screen.dart';
 import 'package:speakup/util/helpers/supabase_helper.dart';
@@ -18,6 +19,7 @@ Future main() async {
   );
 
   Get.lazyPut(() => TextToSpeechController());
+  Get.lazyPut(() => SpriteController());
 
   runApp(const SpeakUp());
 }

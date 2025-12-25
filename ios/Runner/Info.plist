@@ -47,5 +47,9 @@
 		<true/>
 		<key>NSMicrophoneUsageDescription</key>
 		<string>Это приложение использует микрофон для распознавания речи</string>
+		<key>NSCameraUsageDescription</key>
+		<string>Для загрузки рисунков персонажей</string>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>Для выбора рисунков из галереи</string>
 	</dict>
 </plist>

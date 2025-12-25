@@ -8,6 +8,8 @@ import 'package:http/http.dart' as http;
 import 'package:speakup/common/widgets/appbar.dart';
 import 'package:speakup/features/authentication/screens/login_screen.dart';
 import 'package:speakup/features/speakup/models/user_model.dart';
+import 'package:speakup/features/speakup/screens/sprites_screen.dart';
+import 'package:speakup/util/constants/colors.dart';
 import 'package:speakup/util/helpers/helper_functions.dart';
 import 'package:speakup/util/helpers/supabase_helper.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -208,7 +210,58 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   ],
                 ),
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 20),
+              // Sprites Button - NEW
+              Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: SColors.primary.withValues(alpha: 0.2),
+                      blurRadius: 12,
+                      spreadRadius: 2,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: ElevatedButton(
+                  onPressed: () => Get.to(() => const SpritesScreen()),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: SColors.primary,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    elevation: 0,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        'assets/icons/Person_fill.svg',
+                        width: 20,
+                        height: 20,
+                        colorFilter: const ColorFilter.mode(
+                          Colors.white,
+                          BlendMode.srcIn,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      const Text(
+                        'Мои персонажи',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
               // Logout Button
               Container(
                 width: double.infinity,
