@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:speakup/common/widgets/appbar.dart';
+import 'package:speakup/common/widgets/app_bar.dart';
 import 'package:speakup/util/data/marker_coords.dart';
 
 class MapScreen extends StatefulWidget {

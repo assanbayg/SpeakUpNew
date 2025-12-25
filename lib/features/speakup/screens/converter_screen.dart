@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:speakup/common/widgets/appbar.dart';
+import 'package:speakup/common/widgets/app_bar.dart';
 import 'package:speakup/common/widgets/bottom_sheet_widget.dart';
 import 'package:speakup/common/widgets/video_image_widget.dart';
 import 'package:speakup/features/speakup/controllers/speech_controller.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:speakup/common/widgets/appbar.dart';
+import 'package:speakup/common/widgets/app_bar.dart';
 import 'package:speakup/features/speakup/controllers/speaker_controller.dart';
 import 'package:speakup/services/speaker_service.dart';
 import 'package:speakup/util/constants/colors.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:speakup/common/widgets/appbar.dart';
+import 'package:speakup/common/widgets/app_bar.dart';
 import 'package:speakup/features/speakup/controllers/sprite_controller.dart';
 import 'package:speakup/services/sprite_service.dart';
 import 'package:speakup/util/constants/colors.dart';
@@ -16,9 +16,16 @@ class SpritesScreen extends StatelessWidget {
     final controller = Get.put(SpriteController());
 
     return Scaffold(
-      appBar: const SAppBar(
+      appBar: SAppBar(
         title: 'Мои персонажи',
         page: 'Sprites',
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.info_outline),
+            onPressed: () => _showInstructionsModal(context),
+            tooltip: 'Как это работает',
+          ),
+        ],
       ),
       body: RefreshIndicator(
         onRefresh: () => controller.loadSprites(),
@@ -42,6 +49,284 @@ class SpritesScreen extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  void _showInstructionsModal(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.7,
+        minChildSize: 0.5,
+        maxChildSize: 0.9,
+        expand: false,
+        builder: (context, scrollController) => SingleChildScrollView(
+          controller: scrollController,
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: SColors.primary.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Icon(
+                      Icons.palette,
+                      color: SColors.primary,
+                      size: 28,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      'Как создать персонажа',
+                      style:
+                          Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 24),
+
+              // Step 1
+              _buildInstructionStep(
+                context: context,
+                stepNumber: 1,
+                icon: Icons.draw,
+                title: 'Нарисуй своего персонажа',
+                description:
+                    'Возьми бумагу и карандаши. Нарисуй дружелюбного персонажа! Это может быть:\n• Весёлое животное 🦊\n• Добрый монстрик 👾\n• Космический друг 🚀\n• Или что-то своё!',
+              ),
+              const SizedBox(height: 20),
+
+              // Step 2
+              _buildInstructionStep(
+                context: context,
+                stepNumber: 2,
+                icon: Icons.camera_alt,
+                title: 'Сфотографируй рисунок',
+                description:
+                    'Сделай фото своего рисунка или выбери картинку из галереи. Убедись, что рисунок хорошо видно!',
+              ),
+              const SizedBox(height: 20),
+
+              // Step 3
+              _buildInstructionStep(
+                context: context,
+                stepNumber: 3,
+                icon: Icons.upload,
+                title: 'Загрузи рисунок',
+                description:
+                    'Нажми кнопку "Камера" или "Галерея" выше и выбери свой рисунок.',
+              ),
+              const SizedBox(height: 20),
+
+              // Step 4
+              _buildInstructionStep(
+                context: context,
+                stepNumber: 4,
+                icon: Icons.hourglass_empty,
+                title: 'Подожди проверки',
+                description:
+                    'Взрослый проверит твой рисунок и сделает его ещё лучше. Это может занять немного времени.',
+              ),
+              const SizedBox(height: 20),
+
+              // Step 5
+              _buildInstructionStep(
+                context: context,
+                stepNumber: 5,
+                icon: Icons.celebration,
+                title: 'Персонаж готов!',
+                description:
+                    'Когда персонаж будет готов, он появится в списке. Выбери его и начни разговаривать!',
+              ),
+              const SizedBox(height: 24),
+
+              // Important notes
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.blue.shade50,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: Colors.blue.shade200,
+                    width: 1,
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.lightbulb,
+                          color: Colors.blue.shade700,
+                          size: 20,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Важно знать',
+                          style:
+                              Theme.of(context).textTheme.titleSmall?.copyWith(
+                                    color: Colors.blue.shade900,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    _buildBulletPoint(
+                      '✨ Рисуй добрых и весёлых персонажей',
+                      Colors.blue.shade700,
+                    ),
+                    const SizedBox(height: 6),
+                    _buildBulletPoint(
+                      '💚 Никаких страшных или грустных картинок',
+                      Colors.blue.shade700,
+                    ),
+                    const SizedBox(height: 6),
+                    _buildBulletPoint(
+                      '🎨 Рисуй сам или проси помощь у взрослых',
+                      Colors.blue.shade700,
+                    ),
+                    const SizedBox(height: 6),
+                    _buildBulletPoint(
+                      '⭐ Будь креативным и фантазируй!',
+                      Colors.blue.shade700,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // Close button
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () => Navigator.pop(context),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: SColors.primary,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: const Text(
+                    'Понятно!',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInstructionStep({
+    required BuildContext context,
+    required int stepNumber,
+    required IconData icon,
+    required String title,
+    required String description,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Step number circle
+        Container(
+          width: 40,
+          height: 40,
+          decoration: BoxDecoration(
+            color: SColors.primary,
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: SColors.primary.withValues(alpha: 0.3),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Center(
+            child: Text(
+              '$stepNumber',
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: 16),
+        // Content
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    icon,
+                    size: 20,
+                    color: SColors.primary,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      title,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 6),
+              Text(
+                description,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Colors.grey.shade700,
+                      height: 1.5,
+                    ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildBulletPoint(String text, Color color) {
+    return Text(
+      text,
+      style: TextStyle(
+        color: color,
+        fontSize: 14,
+        height: 1.4,
       ),
     );
   }

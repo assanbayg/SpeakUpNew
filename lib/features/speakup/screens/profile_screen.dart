@@ -5,7 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:speakup/common/widgets/appbar.dart';
+import 'package:speakup/common/widgets/app_bar.dart';
 import 'package:speakup/features/authentication/screens/login_screen.dart';
 import 'package:speakup/features/speakup/models/user_model.dart';
 import 'package:speakup/features/speakup/screens/speakers_screen.dart';
