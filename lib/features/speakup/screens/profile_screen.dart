@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:speakup/common/widgets/appbar.dart';
 import 'package:speakup/features/authentication/screens/login_screen.dart';
 import 'package:speakup/features/speakup/models/user_model.dart';
+import 'package:speakup/features/speakup/screens/speakers_screen.dart';
 import 'package:speakup/features/speakup/screens/sprites_screen.dart';
 import 'package:speakup/util/constants/colors.dart';
 import 'package:speakup/util/helpers/helper_functions.dart';
@@ -240,7 +241,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SvgPicture.asset(
-                        'assets/icons/Person_fill.svg',
+                        'assets/icons/Edit.svg',
                         width: 20,
                         height: 20,
                         colorFilter: const ColorFilter.mode(
@@ -251,6 +252,56 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       const SizedBox(width: 12),
                       const Text(
                         'Мои персонажи',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.teal.withValues(alpha: 0.2),
+                      blurRadius: 12,
+                      spreadRadius: 2,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: ElevatedButton(
+                  onPressed: () => Get.to(() => const SpeakersScreen()),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.teal,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    elevation: 0,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        'assets/icons/Audio.svg',
+                        width: 20,
+                        height: 20,
+                        colorFilter: const ColorFilter.mode(
+                          Colors.white,
+                          BlendMode.srcIn,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      const Text(
+                        'Выбор голоса',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -139,17 +140,25 @@ class SpeechController extends GetxController {
       final response = await http.Response.fromStream(streamedResponse);
 
       if (response.statusCode == 200) {
-        // Parse transcription response
-        final transcription = response.body;
+        // Parse JSON response from STT endpoint
+        final data = jsonDecode(response.body);
+        final transcription = data['text'] as String? ?? '';
+        final metrics = data['metrics'] as Map<String, dynamic>?;
+
         listenText.value = transcription;
 
         if (kDebugMode) {
           print('Transcription: $transcription');
+          print('Metrics: $metrics');
         }
 
-        // Generate response
+        // Generate response with text and metrics
         if (transcription.isNotEmpty) {
-          await textController.generateText(transcription, onlyListen);
+          await textController.generateText(
+            transcription,
+            onlyListen,
+            metrics: metrics,
+          );
         } else {
           Get.snackbar('Предупреждение', 'Не удалось распознать речь');
         }

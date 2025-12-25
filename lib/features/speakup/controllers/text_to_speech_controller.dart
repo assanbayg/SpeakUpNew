@@ -8,6 +8,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
+import 'package:speakup/features/speakup/controllers/speaker_controller.dart';
 
 class TextToSpeechController extends GetxController {
   final RxString spokenText = ''.obs;
@@ -18,7 +19,19 @@ class TextToSpeechController extends GetxController {
 
   String get backendUrl => dotenv.env['BACKEND_URL'] ?? 'http://localhost:8000';
 
-  Future<void> generateText(String inputText, bool onlyListen) async {
+  /// Get selected speaker ID from SpeakerController (if available)
+  String? get _selectedSpeaker {
+    if (Get.isRegistered<SpeakerController>()) {
+      return Get.find<SpeakerController>().selectedSpeakerId;
+    }
+    return null;
+  }
+
+  Future<void> generateText(
+    String inputText,
+    bool onlyListen, {
+    Map<String, dynamic>? metrics,
+  }) async {
     _isThinking.value = true;
 
     if (onlyListen) {
@@ -28,23 +41,24 @@ class TextToSpeechController extends GetxController {
     }
 
     try {
+      // Build request body - backend expects 'message' not 'messages'
+      final requestBody = <String, dynamic>{
+        'message': inputText,
+        'model': 'qwen2.5:0.5b-instruct',
+      };
+
+      // Include metrics for adaptive responses
+      if (metrics != null) {
+        requestBody['metrics'] = metrics;
+      }
+
       final response = await http
           .post(
         Uri.parse('$backendUrl/chat/sync'),
         headers: {
           'Content-Type': 'application/json',
         },
-        body: jsonEncode({
-          'messages': [
-            {
-              "role": "system",
-              "content":
-                  "Тебя зовут Спичи, это твое имя. Нужно чтобы бот поддерживал разговор (сonversional bot). Он отвечал на вопрос или утверждение от пользователя комментариями и поддерживал диалог, задавая какие то еще то наталкивающие вопросы. Это твой слоган: Привет! Меня зовут Спичи, и я готова с тобой общаться в любое время. Нажми на микрофон, задавай интересующие тебя вопросы или просто расскажи о том, как прошел твой день. Давай дружить и развиваться!",
-            },
-            {"role": "user", "content": inputText},
-          ],
-          'model': "qwen2.5:0.5b-instruct",
-        }),
+        body: jsonEncode(requestBody),
       )
           .timeout(
         const Duration(seconds: 30),
@@ -83,6 +97,21 @@ class TextToSpeechController extends GetxController {
       Directory appDocDir = await getApplicationDocumentsDirectory();
       String appDocPath = appDocDir.path;
 
+      // Build TTS request body with optional speaker
+      final requestBody = <String, dynamic>{
+        'text': message,
+      };
+
+      // Add selected speaker if available
+      final speaker = _selectedSpeaker;
+      if (speaker != null) {
+        requestBody['voice'] = speaker;
+      }
+
+      if (kDebugMode) {
+        print('TTS request with speaker: $speaker');
+      }
+
       // Call custom backend TTS endpoint
       final response = await http
           .post(
@@ -90,9 +119,7 @@ class TextToSpeechController extends GetxController {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: jsonEncode({
-          'text': message,
-        }),
+        body: jsonEncode(requestBody),
       )
           .timeout(
         const Duration(seconds: 30),

@@ -117,7 +117,7 @@ class SpritesScreen extends StatelessWidget {
                 Expanded(
                   child: _buildUploadButton(
                     context: context,
-                    icon: 'assets/icons/Profile.svg',
+                    icon: 'assets/icons/Camera.svg',
                     label: 'Камера',
                     onTap: () => controller.pickFromCamera(),
                   ),
@@ -126,7 +126,7 @@ class SpritesScreen extends StatelessWidget {
                 Expanded(
                   child: _buildUploadButton(
                     context: context,
-                    icon: 'assets/icons/Map.svg',
+                    icon: 'assets/icons/Document.svg',
                     label: 'Галерея',
                     onTap: () => controller.pickFromGallery(),
                   ),
